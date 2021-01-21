@@ -8,6 +8,6 @@ export const typeOrmConfig: TypeOrmModuleOptions = {
   password: config.DATABASE_PASSWORD,
   database: config.DATABASE_NAME,
   entities: [__dirname + '/../**/*.entity.{js,ts}'],
-  synchronize: true,
+  synchronize: false,
   logging: false,
 };
