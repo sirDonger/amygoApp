@@ -3,10 +3,11 @@ import { config } from '../config/config';
 
 export const typeOrmConfig: TypeOrmModuleOptions = {
   type: 'postgres',
-  port: +config.PORT,
-  username: config.DATABASE_USERNAME,
-  password: config.DATABASE_PASSWORD,
-  database: config.DATABASE_NAME,
+  host: 'db',
+  port: 5432,
+  username: 'postgres',
+  password: 'postgres',
+  database: 'amygo',
   entities: [__dirname + '/../**/*.entity.{js,ts}'],
   synchronize: true,
   logging: false,
