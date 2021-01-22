@@ -16,6 +16,7 @@ export class User {
   })
   email: string;
 
+<<<<<<< HEAD
   password: string;
 
   @Column({ 
@@ -23,4 +24,8 @@ export class User {
     unique: true
    })
   phoneNumber: string;
+=======
+  @Column({ length: 60 })
+  password: string;
+>>>>>>> e6b7fab864a73e7cf981ec6196d2205391e9e6f2
 }
