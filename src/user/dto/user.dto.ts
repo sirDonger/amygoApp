@@ -12,5 +12,4 @@ export class UserDto {
   @IsNotEmpty()
   @Matches(/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$/)
   readonly email: string;
-
 }

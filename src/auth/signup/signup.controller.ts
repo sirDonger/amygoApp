@@ -11,13 +11,11 @@ export class SignupController {
     @Res() res,
     @Body() registerUserDto: SignupUserDto,
   ): Promise<any> {
-    console.log(registerUserDto.password)
-    console.log(registerUserDto.confirm_password)
     try {
       if(registerUserDto.password == registerUserDto.confirm_password){
         await this.signupService.signup(registerUserDto);
         return res.status(HttpStatus.OK).json({
-          message: 'User registration successfully!',
+          message: 'User registered successfully!',
           status: 200,
         });
       }

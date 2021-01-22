@@ -7,7 +7,7 @@ import { UserService } from '../../user/user.service';
 @Injectable()
 export class SignupService {
   constructor(private readonly usersService: UserService) {}
-  
+
   public async signup(registerUserDto: SignupUserDto): Promise<UserDto> {
     const saltRounds = 10;
     const hash = await bcrypt.hash(registerUserDto.password, saltRounds);
