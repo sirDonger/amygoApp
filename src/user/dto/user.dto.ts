@@ -7,7 +7,7 @@ export class UserDto {
 
   @IsString()
   @MaxLength(40)
-  readonly lastName: string;
+  readonly surname: string;
 
   @IsNotEmpty()
   @Matches(/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$/)

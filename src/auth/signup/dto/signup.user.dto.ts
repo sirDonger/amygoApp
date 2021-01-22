@@ -22,12 +22,17 @@ export class SignupUserDto {
   @IsNotEmpty()
   @IsString()
   @MaxLength(60)
-  @Matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/)
+  @Matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/) //small capital digit symbol
   password: string;
 
   @IsNotEmpty()
   @IsString()
   @MaxLength(60)
-  @Matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/)
-  confirm_pass: string;
+  @Matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/) //small capital digit symbol
+  confirm_password: string;
+  
+  @IsNotEmpty()
+  @IsString()
+  @MaxLength(15)
+  phoneNumber: string;
 }

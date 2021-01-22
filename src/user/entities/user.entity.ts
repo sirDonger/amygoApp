@@ -9,13 +9,21 @@ export class User {
   name: string;
 
   @Column()
-  lastName: string;
+  surname: string;
 
   @Column({
     unique: true,
   })
   email: string;
 
-  @Column({ length: 60 })
+  @Column({
+    length: 60
+  })
   password: string;
+
+  @Column({ 
+    length: 15,
+    unique: true
+  })
+  phoneNumber: string;
 }
