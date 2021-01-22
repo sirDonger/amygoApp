@@ -10,11 +10,9 @@ export class SignupService {
   
   public async signup(registerUserDto: SignupUserDto): Promise<UserDto> {
     const saltRounds = 10;
-    const hash = bcrypt.hashSync(registerUserDto.password, saltRounds);
+    const hash = await bcrypt.hash(registerUserDto.password, saltRounds);
 
     registerUserDto.password = hash;
-    console.log(hash);
-
 
     return this.usersService.create(registerUserDto);
   }

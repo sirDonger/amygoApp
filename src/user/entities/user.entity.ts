@@ -9,7 +9,7 @@ export class User {
   name: string;
 
   @Column()
-  lastName: string;
+  surname: string;
 
   @Column({
     unique: true,
@@ -19,6 +19,9 @@ export class User {
   @Column({ length: 60 })
   password: string;
 
-  @Column({ length: 60 })
-  confirm_pass: string;
+  @Column({ 
+    length: 15,
+    unique: true
+   })
+  phoneNumber: string;
 }
