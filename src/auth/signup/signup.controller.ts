@@ -19,7 +19,6 @@ export class SignupController {
         status: 200,
       });
     } catch (err) {
-      console.log(err);
       return res.status(HttpStatus.BAD_REQUEST).json({
         message: err,
         status: 400,
