@@ -56,7 +56,7 @@ export class SignInService {
   }
 
   public async validateUserByJwt(payload: JwtPayload) {
-    const user = await this.userService.findByEmail(payload.email);
+    const user = await this.userService.findByEmail(payload.id);
 
     if (!user) {
       throw new UnauthorizedException();
@@ -66,7 +66,7 @@ export class SignInService {
 
   protected createJwtPayload(user) {
     const data: JwtPayload = {
-      email: user.email,
+      id: user.id,
     };
 
     const jwt = this.jwtService.sign(data);

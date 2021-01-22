@@ -16,8 +16,6 @@ export class User {
   })
   email: string;
 
-  password: string;
-
   @Column({ length: 60 })
-  confirm_pass: string;
+  password: string;
 }
