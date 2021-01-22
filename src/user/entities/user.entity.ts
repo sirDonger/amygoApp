@@ -19,6 +19,6 @@ export class User {
   @Column({ length: 60 })
   password: string;
 
-  @Column({ length: 15 })
-  phoneNumber: string;
+  @Column({ length: 60 })
+  confirm_pass: string;
 }
