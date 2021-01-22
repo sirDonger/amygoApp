@@ -7,8 +7,6 @@ import {
 } from 'class-validator';
 
 export class SignupUserDto {
-  readonly id: number;
-
   @IsString()
   @MaxLength(30)
   readonly name: string;

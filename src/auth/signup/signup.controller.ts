@@ -19,7 +19,7 @@ export class SignupController {
         status: 200,
       });
     } catch (err) {
-      return res.status(HttpStatus.BAD_REQUEST).json({
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
         message: err,
         status: 400,
       });

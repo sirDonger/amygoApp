@@ -1,14 +1,14 @@
 import {
-  Injectable,
-  NotFoundException,
   HttpException,
   HttpStatus,
+  Injectable,
+  NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
-import { IUser } from './interfaces/user.interface';
 import { UserDto } from './dto/user.dto';
 import { Repository } from 'typeorm';
+import { SignupUserDto } from '../auth/signup/dto/signup.user.dto';
 
 @Injectable()
 export class UserService {
@@ -41,17 +41,16 @@ export class UserService {
     if (!user) {
       throw new NotFoundException(`User #${userId} not found`);
     }
-
     return user;
   }
 
-  public async create(userDto: UserDto): Promise<IUser> {
+  public async create(userDto: SignupUserDto): Promise<UserDto> {
     try {
-      console.log(this.userRepository, 'my log');
       const user = await this.userRepository.save(userDto);
-      return user;
+      const { password, ...rest } = user;
+      return rest;
     } catch (err) {
-      throw new HttpException(err, HttpStatus.BAD_REQUEST);
+      throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 }
