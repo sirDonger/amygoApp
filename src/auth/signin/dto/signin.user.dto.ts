@@ -6,7 +6,7 @@ import {
   Matches,
 } from 'class-validator';
 
-export class LoginDto {
+export class SignInUserDto {
   @IsEmail()
   @Matches(/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$/)
   readonly email: string;

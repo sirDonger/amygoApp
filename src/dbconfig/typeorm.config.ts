@@ -3,12 +3,12 @@ import { config } from '../config/config';
 
 export const typeOrmConfig: TypeOrmModuleOptions = {
   type: 'postgres',
-  port: +config.PORT,
   host: config.DATABASE_HOST,
+  port: config.PORT,
   username: config.DATABASE_USERNAME,
   password: config.DATABASE_PASSWORD,
   database: config.DATABASE_NAME,
   entities: [__dirname + '/../**/*.entity.{js,ts}'],
-  synchronize: false,
+  synchronize: true,
   logging: false,
 };

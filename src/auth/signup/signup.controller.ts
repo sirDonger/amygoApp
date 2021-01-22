@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Res, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Res, HttpStatus } from '@nestjs/common';
 import { SignupService } from './signup.service';
 import { SignupUserDto } from './dto/signup.user.dto';
 
@@ -19,11 +19,15 @@ export class SignupController {
         status: 200,
       });
     } catch (err) {
-      console.log(err);
       return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
         message: err,
         status: 400,
       });
     }
+  }
+
+  @Get()
+  genGreeting(): string {
+    return "It's sign up api";
   }
 }
