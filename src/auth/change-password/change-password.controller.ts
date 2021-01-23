@@ -1,5 +1,4 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
-import { SignInUserDto } from '../signin/dto/signIn.user.dto';
+import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
 import { ChangePasswordService } from './change-password.service';
 import { ChangePasswordDto } from './dto/change-passwordDto';
 import { AuthGuard } from '@nestjs/passport';
@@ -12,7 +11,9 @@ export class ChangePasswordController {
   @UseGuards(AuthGuard('jwt'))
   public async changePassword(
     @Body() changePasswordDto: ChangePasswordDto,
+    @Req() req,
   ): Promise<any> {
-    return this.changePasswordService.changePassword(changePasswordDto);
+    const { id } = req.user;
+    return this.changePasswordService.changePassword(changePasswordDto, id);
   }
 }

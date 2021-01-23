@@ -12,7 +12,7 @@ export class ChangePasswordService {
     @InjectRepository(User)
     private userRepository: Repository<User>,
   ) {}
-  async changePassword(changePasswordDto: ChangePasswordDto) {
+  async changePassword(changePasswordDto: ChangePasswordDto, userId: string) {
     const { email, password, newPassword } = changePasswordDto;
     const user = await this.userRepository.findOne({ email });
 
@@ -20,6 +20,13 @@ export class ChangePasswordService {
       return {
         message: Messages.EMAIL_NOT_EXISTS,
         status: HttpStatus.PRECONDITION_FAILED,
+      };
+    }
+
+    if (user.id !== userId) {
+      return {
+        message: Messages.NOT_ALLOWED_OPERATION,
+        status: HttpStatus.FORBIDDEN,
       };
     }
 
