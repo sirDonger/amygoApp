@@ -4,24 +4,21 @@ import {
   Res,
   HttpStatus,
   NotFoundException,
-  Headers,
+  UseGuards,
+  Req,
 } from '@nestjs/common';
 import { IUser } from './interfaces/user.interface';
 import { UserService } from './user.service';
-import jsonwebtoken from 'jsonwebtoken';
+import { AuthGuard } from '@nestjs/passport';
 
-@Controller('/api/user')
+@Controller('user')
 export class UserController {
   constructor(private readonly usersService: UserService) {}
 
   @Get('/profile')
-  public async getUser(
-    @Res() res,
-    @Headers('Authorization') token: string,
-  ): Promise<IUser> {
-    const tokenDecoded = jsonwebtoken.decode(token);
-
-    const user = await this.usersService.findById(tokenDecoded[0].id);
+  @UseGuards(AuthGuard('jwt'))
+  public async getUser(@Req() req, @Res() res): Promise<IUser> {
+    const user = await this.usersService.findById(req.user.id);
 
     if (!user) {
       throw new NotFoundException('User does not exist!');

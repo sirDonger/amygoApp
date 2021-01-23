@@ -1,8 +1,8 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { SignInService } from './signin.service';
-import { SignInUserDto } from './dto/signin.user.dto';
+import { SignInUserDto } from './dto/signIn.user.dto';
+import { SignInService } from './signIn.service';
 
-@Controller('auth/signin')
+@Controller('auth/signIn')
 export class SignInController {
   constructor(private readonly signInService: SignInService) {}
 
