@@ -13,7 +13,7 @@ export class SignupUserDto {
 
   @IsString()
   @MaxLength(40)
-  readonly lastname: string;
+  readonly surname: string;
 
   @IsEmail()
   @Matches(/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$/)
@@ -22,15 +22,15 @@ export class SignupUserDto {
   @IsNotEmpty()
   @IsString()
   @MaxLength(60)
-  @Matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/) //small capital digit symbol
+  @Matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/)
   password: string;
 
   @IsNotEmpty()
   @IsString()
   @MaxLength(60)
-  @Matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/) //small capital digit symbol
+  @Matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/)
   confirm_password: string;
-  
+
   @IsNotEmpty()
   @IsString()
   @MaxLength(15)

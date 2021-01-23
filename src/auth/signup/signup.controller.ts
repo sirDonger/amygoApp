@@ -12,18 +12,17 @@ export class SignupController {
     @Body() registerUserDto: SignupUserDto,
   ): Promise<any> {
     try {
-      if(registerUserDto.password == registerUserDto.confirm_password){
+      if (registerUserDto.password == registerUserDto.confirm_password) {
         await this.signupService.signup(registerUserDto);
         return res.status(HttpStatus.OK).json({
-          message: 'User registered successfully!',
+          message: 'User registration successfully!',
           status: 200,
         });
-      }
-      else{
+      } else {
         return res.status(HttpStatus.PRECONDITION_FAILED).json({
           message: 'Password was not confirmed',
-          status: 412
-        })
+          status: 412,
+        });
       }
     } catch (err) {
       return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -34,7 +33,7 @@ export class SignupController {
   }
 
   @Get()
-  genGreeting():string{
-    return "It's sign up api"
+  genGreeting(): string {
+    return "It's sign up api";
   }
 }
