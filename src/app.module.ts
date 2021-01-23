@@ -12,6 +12,7 @@ import { ChangePasswordModule } from './auth/change-password/change-password.mod
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot(typeOrmConfig),
     SignInModule,
+
     SignUpModule,
     ChangePasswordModule,
     UserModule,
