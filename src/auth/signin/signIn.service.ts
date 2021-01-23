@@ -1,9 +1,10 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
 import { UserService } from '../../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { SignInUserDto } from './dto/signIn.user.dto';
 import * as bcrypt from 'bcryptjs';
 import { JwtPayload } from './interfaces/jwt.payload';
+import { Messages } from '../messagesEnum/messages';
 
 @Injectable()
 export class SignInService {
@@ -13,22 +14,22 @@ export class SignInService {
   ) {}
 
   public async signIn(
-    loginDto: SignInUserDto,
+    signInUserDto: SignInUserDto,
   ): Promise<any | { status: number; message: string }> {
-    const userData = await this.userService.findByEmail(loginDto.email);
+    const userData = await this.userService.findByEmail(signInUserDto.email);
     if (!userData) {
       throw new UnauthorizedException();
     }
 
     const isPasswordValid = await bcrypt.compare(
-      loginDto.password,
+      signInUserDto.password,
       userData.password,
     );
 
     if (!isPasswordValid) {
       return {
-        message: 'Authentication failed. Wrong password',
-        status: 412,
+        message: Messages.SIGN_IN_FAILED,
+        status: HttpStatus.PRECONDITION_FAILED,
       };
     }
 
@@ -40,7 +41,7 @@ export class SignInService {
 
     return {
       accessToken: accessToken,
-      status: 200,
+      status: HttpStatus.OK,
     };
   }
 }

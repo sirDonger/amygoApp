@@ -5,6 +5,7 @@ import { UserModule } from './user/user.module';
 import { SignUpModule } from './auth/signup/signUp.module';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { ChangePasswordModule } from './auth/change-password/change-password.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { ConfigModule } from '@nestjs/config';
     TypeOrmModule.forRoot(typeOrmConfig),
     SignInModule,
     SignUpModule,
+    ChangePasswordModule,
     UserModule,
   ],
 })

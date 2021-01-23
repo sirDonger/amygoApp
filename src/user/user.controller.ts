@@ -7,7 +7,6 @@ import {
   UseGuards,
   Req,
 } from '@nestjs/common';
-import { IUser } from './interfaces/user.interface';
 import { UserService } from './user.service';
 import { AuthGuard } from '@nestjs/passport';
 
@@ -17,16 +16,16 @@ export class UserController {
 
   @Get('/profile')
   @UseGuards(AuthGuard('jwt'))
-  public async getUser(@Req() req, @Res() res): Promise<IUser> {
+  public async getUser(@Req() req, @Res() res): Promise<void> {
     const user = await this.usersService.findById(req.user.id);
 
     if (!user) {
       throw new NotFoundException('User does not exist!');
     }
 
-    return res.status(HttpStatus.OK).json({
-      user: user,
-      status: 200,
-    });
+    delete user.id;
+    delete user.password;
+
+    return res.status(HttpStatus.OK).json(user);
   }
 }
