@@ -18,7 +18,7 @@ export class UserController {
   @Get('/profile')
   @UseGuards(AuthGuard('jwt'))
   public async getUser(@Req() req, @Res() res): Promise<IUser> {
-    const user = await this.usersService.findById(req.user.id);
+    const user = await this.usersService.findById(req.body.userId);
 
     if (!user) {
       throw new NotFoundException('User does not exist!');

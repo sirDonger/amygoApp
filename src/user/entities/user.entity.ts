@@ -7,8 +7,6 @@ export class User {
   id: string;
 
   @Column()
-  @IsString()
-  @MaxLength(30)
   name: string;
 
   @Column()
