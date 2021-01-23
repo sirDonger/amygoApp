@@ -1,10 +1,10 @@
-import { Controller, Get, Post, Body, Res, HttpStatus } from '@nestjs/common';
-import { SignupService } from './signup.service';
+import { Controller, Post, Body, Res, HttpStatus } from '@nestjs/common';
+import { SignUpService } from './signUp.service';
 import { SignupUserDto } from './dto/signup.user.dto';
 
-@Controller('/auth/signup')
+@Controller('/auth/signUp')
 export class SignupController {
-  constructor(private readonly signupService: SignupService) {}
+  constructor(private readonly signupService: SignUpService) {}
 
   @Post()
   public async register(
@@ -15,7 +15,7 @@ export class SignupController {
       if (registerUserDto.password == registerUserDto.confirm_password) {
         await this.signupService.signup(registerUserDto);
         return res.status(HttpStatus.OK).json({
-          message: 'User registration successfully!',
+          message: 'User created successfully!',
           status: 200,
         });
       } else {
@@ -30,10 +30,5 @@ export class SignupController {
         status: 500,
       });
     }
-  }
-
-  @Get()
-  genGreeting(): string {
-    return "It's sign up api";
   }
 }

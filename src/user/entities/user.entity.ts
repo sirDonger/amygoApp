@@ -20,13 +20,13 @@ export class User {
   email: string;
 
   @Column({
-    length: 60,
-  })
-  password: string;
-
-  @Column({
     length: 15,
     unique: true,
   })
   phoneNumber: string;
+
+  @Column({
+    length: 60,
+  })
+  password: string;
 }

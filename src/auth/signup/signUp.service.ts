@@ -5,7 +5,7 @@ import { UserDto } from '../../user/dto/user.dto';
 import { UserService } from '../../user/user.service';
 
 @Injectable()
-export class SignupService {
+export class SignUpService {
   constructor(private readonly usersService: UserService) {}
 
   public async signup(registerUserDto: SignupUserDto): Promise<UserDto> {
