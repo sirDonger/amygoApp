@@ -1,4 +1,3 @@
-
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
@@ -73,7 +72,7 @@ export class SignInService {
     const jwt = this.jwtService.sign(data);
 
     return {
-      expiresIn: 3600,
+      expiresIn: 3500,
       token: jwt,
     };
   }
