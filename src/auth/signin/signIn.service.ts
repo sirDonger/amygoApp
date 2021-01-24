@@ -1,4 +1,4 @@
-import { HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { UserService } from '../../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { SignInUserDto } from './dto/signIn.user.dto';
@@ -15,10 +15,13 @@ export class SignInService {
 
   public async signIn(
     signInUserDto: SignInUserDto,
-  ): Promise<any | { status: number; message: string }> {
+  ): Promise<any | { status: number; message: string; accessToken?: string }> {
     const userData = await this.userService.findByEmail(signInUserDto.email);
     if (!userData) {
-      throw new UnauthorizedException();
+      return {
+        message: Messages.SIGN_IN_FAILED,
+        status: HttpStatus.UNAUTHORIZED,
+      };
     }
 
     const isPasswordValid = await bcrypt.compare(
@@ -29,7 +32,7 @@ export class SignInService {
     if (!isPasswordValid) {
       return {
         message: Messages.SIGN_IN_FAILED,
-        status: HttpStatus.PRECONDITION_FAILED,
+        status: HttpStatus.UNAUTHORIZED,
       };
     }
 
