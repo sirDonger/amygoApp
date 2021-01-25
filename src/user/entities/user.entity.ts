@@ -16,6 +16,9 @@ export class User {
   })
   email: string;
 
+  @Column({ nullable: true })
+  profileImage: string;
+
   @Column({
     length: 15,
     unique: true,

@@ -9,15 +9,17 @@ import {
 export class SignupUserDto {
   @IsString()
   @MaxLength(30)
-  readonly name: string;
+  name: string;
 
   @IsString()
   @MaxLength(40)
-  readonly surname: string;
+  surname: string;
+
+  profileImage: string;
 
   @IsEmail()
   @Matches(/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$/)
-  readonly email: string;
+  email: string;
 
   @IsNotEmpty()
   @IsString()

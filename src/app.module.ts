@@ -6,6 +6,7 @@ import { SignUpModule } from './auth/signup/signUp.module';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ChangePasswordModule } from './auth/change-password/change-password.module';
+import { ChangeProfileModule } from './auth/change-profile/change-profile.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { ChangePasswordModule } from './auth/change-password/change-password.mod
     SignInModule,
     SignUpModule,
     ChangePasswordModule,
+    ChangeProfileModule,
     UserModule,
   ],
 })

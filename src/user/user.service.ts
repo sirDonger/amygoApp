@@ -9,6 +9,7 @@ import { User } from './entities/user.entity';
 import { UserDto } from './dto/user.dto';
 import { Repository } from 'typeorm';
 import { SignupUserDto } from '../auth/signup/dto/signup.user.dto';
+import { ChangeProfileDto } from '../auth/change-profile/dto/changeProfileDto';
 
 @Injectable()
 export class UserService {
@@ -52,5 +53,9 @@ export class UserService {
     } catch (err) {
       throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+  }
+
+  public async updateProfile(user, userData: ChangeProfileDto) {
+    await this.userRepository.update(user, userData);
   }
 }
