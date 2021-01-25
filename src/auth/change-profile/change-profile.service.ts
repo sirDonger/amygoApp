@@ -9,7 +9,7 @@ export class ChangeProfileService {
   public async updateProfile(
     changeProfileDto: ChangeProfileDto,
     userId: string,
-  ): Promise<any | { status: number; message: string; accessToken?: string }> {
+  ): Promise<any | { status: number; message: string }> {
     const user = await this.userService.findById(userId);
     if (!user) {
       return {
@@ -17,8 +17,6 @@ export class ChangeProfileService {
         status: HttpStatus.UNAUTHORIZED,
       };
     }
-    console.log(user, 'USER');
-    console.log(changeProfileDto, 'changeProfileDto');
     await this.userService.updateProfile(user, changeProfileDto);
   }
 }

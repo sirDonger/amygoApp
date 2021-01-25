@@ -25,7 +25,8 @@ export class ChangeProfileController {
   ): Promise<any> {
     try {
       const { id } = req.user;
-
+      console.log(req.user, 'req.user');
+      console.log(changeProfileDto, 'changeProfileDto');
       await this.changeProfileService.updateProfile(changeProfileDto, id);
 
       res

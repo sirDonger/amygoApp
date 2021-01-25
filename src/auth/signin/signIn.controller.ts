@@ -29,6 +29,7 @@ export class SignInController {
     @Res() res,
   ): Promise<any> {
     try {
+      console.log(signInUserDto, 'signInUserDto');
       const response = await this.signInService.signIn(signInUserDto);
       res
         .status(response.status)

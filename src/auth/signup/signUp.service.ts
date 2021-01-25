@@ -9,10 +9,7 @@ export class SignUpService {
   constructor(private readonly usersService: UserService) {}
 
   public async signup(registerUserDto: SignupUserDto): Promise<UserDto> {
-    const saltRounds = 10;
-    const hash = await bcrypt.hash(registerUserDto.password, saltRounds);
-
-    registerUserDto.password = hash;
+    registerUserDto.password = await bcrypt.hash(registerUserDto.password, 10);
 
     return this.usersService.create(registerUserDto);
   }

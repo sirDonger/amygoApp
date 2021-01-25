@@ -16,7 +16,10 @@ export class User {
   })
   email: string;
 
-  @Column({ nullable: true })
+  @Column({
+    nullable: true,
+    default: 'https://www.freedigitalphotos.net/images/img/homepage/394230.jpg',
+  })
   profileImage: string;
 
   @Column({
@@ -25,8 +28,6 @@ export class User {
   })
   phoneNumber: string;
 
-  @Column({
-    length: 60,
-  })
+  @Column()
   password: string;
 }
