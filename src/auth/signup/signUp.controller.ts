@@ -10,15 +10,18 @@ import {
 import { SignUpService } from './signUp.service';
 import { SignupUserDto } from './dto/signup.user.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { fileLimits } from '../fileUpload/fileLimits.config';
 import { Messages } from '../messagesEnum/messages';
+import { FileUploadService } from '../../helpers/file-upload/file-upload.service';
 
 @Controller('/auth/signUp')
 export class SignupController {
-  constructor(private readonly signupService: SignUpService) {}
+  constructor(
+    private readonly signupService: SignUpService,
+    private readonly fileUploadService: FileUploadService,
+  ) {}
 
   @Post()
-  @UseInterceptors(FileInterceptor('profileImage', fileLimits))
+  @UseInterceptors(FileInterceptor('profileImage'))
   public async register(
     @Res() res,
     @UploadedFile() image,
@@ -32,7 +35,11 @@ export class SignupController {
       }
 
       if (image) {
-        signupUserDto.profileImage = image.filename;
+        console.log(image, 'image');
+        image.originalname = Date.now() + image.originalname;
+        console.log(image.filename);
+        signupUserDto.profileImage = process.env.S3_BUCKET_URL +  image.originalname;
+        await this.fileUploadService.upload(image);
       }
 
       await this.signupService.signup(signupUserDto);
@@ -41,9 +48,7 @@ export class SignupController {
         message: Messages.NEW_USER_CREATED,
       });
     } catch (err) {
-      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-        message: err,
-      });
+      return res.json(err)
     }
   }
 }

@@ -4,10 +4,11 @@ import { ChangeProfileService } from './change-profile.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '../../user/entities/user.entity';
 import { UserService } from '../../user/user.service';
+import { FileUploadService } from '../../helpers/file-upload/file-upload.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User])],
   controllers: [ChangeProfileController],
-  providers: [ChangeProfileService, UserService],
+  providers: [ChangeProfileService, UserService, FileUploadService],
 })
 export class ChangeProfileModule {}

@@ -3,7 +3,7 @@ import {
   IsNotEmpty,
   IsEmail,
   IsString,
-  Matches,
+  Matches, IsOptional,
 } from 'class-validator';
 
 export class SignupUserDto {
@@ -37,4 +37,8 @@ export class SignupUserDto {
   @IsString()
   @MaxLength(15)
   phoneNumber: string;
+
+  @IsString()
+  @IsOptional()
+  emergencyContact: string;
 }
