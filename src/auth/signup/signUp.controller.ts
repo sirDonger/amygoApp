@@ -35,20 +35,19 @@ export class SignupController {
       }
 
       if (image) {
-        console.log(image, 'image');
         image.originalname = Date.now() + image.originalname;
-        console.log(image.filename);
-        signupUserDto.profileImage = process.env.S3_BUCKET_URL +  image.originalname;
-        await this.fileUploadService.upload(image);
+        signupUserDto.profileImage =
+          process.env.S3_BUCKET_URL + image.originalname;
       }
 
       await this.signupService.signup(signupUserDto);
+      await this.fileUploadService.upload(image);
 
       return res.status(HttpStatus.CREATED).json({
         message: Messages.NEW_USER_CREATED,
       });
     } catch (err) {
-      return res.json(err)
+      return res.json(err);
     }
   }
 }
