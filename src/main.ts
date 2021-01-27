@@ -10,7 +10,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
   app.enableCors();
   app.useGlobalPipes(
     new ValidationPipe({
-      forbidUnknownValues: true,
+      forbidNonWhitelisted: true,
       whitelist: true,
     }),
   );

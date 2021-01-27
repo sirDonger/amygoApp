@@ -25,6 +25,7 @@ export class FileUploadService {
       Key: String(name),
       Body: file,
     };
+
     return new Promise((resolve, reject) => {
       s3.upload(params, (err, data) => {
         if (err) {

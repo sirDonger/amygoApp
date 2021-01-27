@@ -2,7 +2,6 @@ import {
   Body,
   Controller,
   HttpStatus,
-  InternalServerErrorException,
   Post,
   Req,
   Res,
@@ -52,10 +51,7 @@ export class ChangeProfileController {
 
       res.status(HttpStatus.NO_CONTENT).send();
     } catch (err) {
-      throw new InternalServerErrorException(
-        err,
-        HttpStatus.BAD_REQUEST.toString(),
-      );
+      res.status(err.status).json({ message: err.response.message });
     }
   }
 }

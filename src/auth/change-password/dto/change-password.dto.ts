@@ -12,6 +12,7 @@ export class ChangePasswordDto {
   @ApiProperty({
     example: 'Password123##',
     type: String,
+
     description:
       'Password which consist of at least one Capital letter, one small, digit, and special symbol',
   })
@@ -19,7 +20,9 @@ export class ChangePasswordDto {
 
   @IsNotEmpty()
   @IsString()
-  @Matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,60}$/)
+  @Matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,60}$/, {
+    message: ValidationMessagesEnum.PASSWORD,
+  })
   @ApiProperty({
     example: 'Password123##',
     type: String,

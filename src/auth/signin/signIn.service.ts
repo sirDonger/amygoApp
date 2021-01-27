@@ -5,6 +5,7 @@ import { SignInUserDto } from './dto/signIn.user.dto';
 import * as bcrypt from 'bcryptjs';
 import { JwtPayloadInterface } from './interfaces/jwt.payload.interface';
 import { MessagesEnum } from '../messagesEnum';
+import { ResponseDto } from '../dtoResponse/response.dto';
 
 @Injectable()
 export class SignInService {
@@ -13,10 +14,10 @@ export class SignInService {
     private readonly jwtService: JwtService,
   ) {}
 
-  public async signIn(
-    signInUserDto: SignInUserDto,
-  ): Promise<{ status: number; message?: string; accessToken?: string }> {
-    const userData = await this.userService.findByEmail(signInUserDto.email);
+  public async signIn(signInUserDto: SignInUserDto): Promise<ResponseDto> {
+    const userData = await this.userService.findByEmail(
+      signInUserDto.email.toLowerCase(),
+    );
     if (!userData) {
       return {
         message: MessagesEnum.SIGN_IN_FAILED,

@@ -5,6 +5,7 @@ import { User } from '../../user/entities/user.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
 import { MessagesEnum } from '../messagesEnum';
+import { ResponseDto } from '../dtoResponse/response.dto';
 
 @Injectable()
 export class ChangePasswordService {
@@ -15,7 +16,7 @@ export class ChangePasswordService {
   async changePassword(
     changePasswordDto: ChangePasswordDto,
     userId: string,
-  ): Promise<{ message: string; status: number }> {
+  ): Promise<ResponseDto> {
     const { password, newPassword } = changePasswordDto;
     const user = await this.userRepository.findOne(userId);
 
@@ -50,7 +51,7 @@ export class ChangePasswordService {
 
     return {
       message: MessagesEnum.PASSWORD_CHANGED,
-      status: HttpStatus.ACCEPTED,
+      status: HttpStatus.NO_CONTENT,
     };
   }
 }

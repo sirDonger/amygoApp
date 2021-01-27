@@ -8,10 +8,13 @@ import { UserService } from '../../user/user.service';
 export class SignUpService {
   constructor(private readonly usersService: UserService) {}
 
-  public async signup(registerUserDto: SignupUserDto): Promise<UserDto> {
+  public async signup(registerUserDto: SignupUserDto, image): Promise<UserDto> {
     registerUserDto.password = await bcrypt.hash(registerUserDto.password, 10);
     registerUserDto.email = registerUserDto.email.toLowerCase();
-
-    return this.usersService.create(registerUserDto);
+    try {
+      return this.usersService.create(registerUserDto, image);
+    } catch (err) {
+      throw err;
+    }
   }
 }
