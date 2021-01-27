@@ -13,8 +13,8 @@ import { ChangeProfileService } from './change-profile.service';
 import { ChangeProfileDto } from './dto/changeProfile.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { FileUploadService } from '../../helpers/file-upload';
-import { UserService } from '../../user/user.service';
+import { FileUploadService } from '../../../helpers/file-upload';
+import { UserService } from '../user.service';
 
 @Controller('user/profile/update')
 export class ChangeProfileController {
@@ -37,6 +37,7 @@ export class ChangeProfileController {
       const { id } = req.user;
 
       if (image) {
+        this.fileUploadService.isFileValid(image);
         image.originalname = Date.now() + image.originalname;
         changeProfileDto.profileImage =
           process.env.S3_BUCKET_URL + image.originalname;

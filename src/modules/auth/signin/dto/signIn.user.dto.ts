@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsEmail, IsString, Matches } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { ValidationMessagesEnum } from '../../messagesEnum';
+import { ValidationMessagesEnum } from '../../../../constants/messagesEnum';
 
 export class SignInUserDto {
   @IsEmail()

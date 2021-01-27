@@ -8,7 +8,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategyConfig } from './jwt.strategy.config';
-import { FileUploadService } from '../../helpers/file-upload';
+import { FileUploadService } from '../../../helpers/file-upload';
 
 @Module({
   imports: [

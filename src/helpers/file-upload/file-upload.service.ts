@@ -1,17 +1,15 @@
 import {
   Injectable,
   PayloadTooLargeException,
+  ServiceUnavailableException,
   UnsupportedMediaTypeException,
 } from '@nestjs/common';
 import { S3 } from 'aws-sdk';
-import { Logger } from '@nestjs/common';
 import { constant } from '../../constants';
 
 @Injectable()
 export class FileUploadService {
   async upload(file) {
-    console.log('upload started');
-    this.isFileValid(file);
     const { originalname } = file;
     const bucketS3 = process.env.S3_BUCKET_NAME;
 
@@ -26,14 +24,11 @@ export class FileUploadService {
       Body: file,
     };
 
-    return new Promise((resolve, reject) => {
-      s3.upload(params, (err, data) => {
-        if (err) {
-          Logger.error(err);
-          reject(err.message);
-        }
-        resolve(data);
-      });
+    await s3.upload(params, (err, data) => {
+      if (err) {
+        throw new ServiceUnavailableException(err);
+      }
+      return data;
     });
   }
 
@@ -54,31 +49,25 @@ export class FileUploadService {
     }
   }
 
-  delete(imageName) {
+  async delete(imageName) {
     const s3 = this.getS3();
     const params = {
       Bucket: process.env.S3_BUCKET_NAME,
       Key: imageName.slice(process.env.S3_BUCKET_URL.length),
     };
 
-    return new Promise((resolve, reject) => {
-      s3.createBucket(
-        {
-          Bucket: process.env.S3_BUCKET_NAME,
-        },
-        function () {
-          s3.deleteObject(params, function (err, data) {
-            if (err) {
-              reject(err.message);
-              console.log(err);
-            } else {
-              console.log(data);
-              resolve(data);
-            }
-          });
-        },
-      );
-      return;
-    });
+    await s3.createBucket(
+      {
+        Bucket: process.env.S3_BUCKET_NAME,
+      },
+      function () {
+        s3.deleteObject(params, function (err, data) {
+          if (err) {
+            throw new ServiceUnavailableException(err);
+          }
+          return data;
+        });
+      },
+    );
   }
 }

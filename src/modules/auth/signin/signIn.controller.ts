@@ -1,11 +1,4 @@
-import {
-  Body,
-  Controller,
-  HttpStatus,
-  NotFoundException,
-  Post,
-  Res,
-} from '@nestjs/common';
+import { Body, Controller, Post, Res } from '@nestjs/common';
 import { SignInUserDto } from './dto/signIn.user.dto';
 import { SignInService } from './signIn.service';
 import {
@@ -34,7 +27,7 @@ export class SignInController {
         .status(response.status)
         .json({ message: response.message, accessToken: response.accessToken });
     } catch (err) {
-      throw new NotFoundException(err, HttpStatus.BAD_REQUEST.toString());
+      res.status(err.status).json({ message: err.message });
     }
   }
 }

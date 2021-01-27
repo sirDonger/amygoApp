@@ -1,8 +1,8 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { MessagesEnum } from '../messagesEnum';
+import { MessagesEnum } from '../../../constants/messagesEnum';
 import { ChangeProfileDto } from './dto/changeProfile.dto';
-import { UserService } from '../../user/user.service';
-import { ResponseDto } from '../dtoResponse/response.dto';
+import { UserService } from '../user.service';
+import { ResponseDto } from '../../auth/dtoResponse/response.dto';
 
 @Injectable()
 export class ChangeProfileService {

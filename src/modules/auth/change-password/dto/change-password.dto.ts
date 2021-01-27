@@ -1,7 +1,7 @@
 import { IsNotEmpty, IsString, Matches } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { ValidationMessagesEnum } from '../../messagesEnum';
-import { MatchTwoFields } from '../../../helpers/validators/matchTwoField.decorator';
+import { ValidationMessagesEnum } from '../../../../constants/messagesEnum';
+import { MatchTwoFields } from '../../../../helpers/validators/matchTwoField.decorator';
 
 export class ChangePasswordDto {
   @IsNotEmpty()

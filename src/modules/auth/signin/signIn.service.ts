@@ -4,7 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import { SignInUserDto } from './dto/signIn.user.dto';
 import * as bcrypt from 'bcryptjs';
 import { JwtPayloadInterface } from './interfaces/jwt.payload.interface';
-import { MessagesEnum } from '../messagesEnum';
+import { MessagesEnum } from '../../../constants/messagesEnum';
 import { ResponseDto } from '../dtoResponse/response.dto';
 
 @Injectable()

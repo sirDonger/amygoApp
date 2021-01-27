@@ -10,11 +10,15 @@ import {
 import { SignUpService } from './signUp.service';
 import { SignupUserDto } from './dto/signup.user.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { MessagesEnum } from '../messagesEnum';
+import { MessagesEnum } from '../../../constants/messagesEnum';
+import { FileUploadService } from '../../../helpers/file-upload';
 
 @Controller('/auth/signUp')
 export class SignupController {
-  constructor(private readonly signupService: SignUpService) {}
+  constructor(
+    private readonly signupService: SignUpService,
+    private readonly fileUploadService: FileUploadService,
+  ) {}
 
   @Post()
   @UseInterceptors(FileInterceptor('profileImage'))
@@ -25,12 +29,16 @@ export class SignupController {
   ): Promise<void> {
     try {
       if (image) {
+        this.fileUploadService.isFileValid(image);
         image.originalname = Date.now() + image.originalname;
         signupUserDto.profileImage =
           process.env.S3_BUCKET_URL + image.originalname;
       }
 
-      await this.signupService.signup(signupUserDto, image);
+      await this.signupService.signup(signupUserDto);
+      if (image) {
+        await this.fileUploadService.upload(image);
+      }
 
       res.status(HttpStatus.CREATED).json({
         message: MessagesEnum.NEW_USER_CREATED,

@@ -6,8 +6,8 @@ import {
   Matches,
   MaxLength,
 } from 'class-validator';
-import { ValidationMessagesEnum } from '../../messagesEnum';
-import { MatchTwoFields } from '../../../helpers/validators/matchTwoField.decorator';
+import { ValidationMessagesEnum } from '../../../../constants/messagesEnum';
+import { MatchTwoFields } from '../../../../helpers/validators/matchTwoField.decorator';
 
 export class SignupUserDto {
   @IsString({ message: ValidationMessagesEnum.NAME })
