@@ -1,9 +1,11 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { UserService } from '../../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { SignInUserDto } from './dto/signIn.user.dto';
 import * as bcrypt from 'bcryptjs';
-import { JwtPayload } from './interfaces/jwt.payload';
+import { JwtPayloadInterface } from './interfaces/jwt.payload.interface';
+import { MessagesEnum } from '../messagesEnum';
+import { ResponseDto } from '../dtoResponse/response.dto';
 
 @Injectable()
 export class SignInService {
@@ -12,35 +14,38 @@ export class SignInService {
     private readonly jwtService: JwtService,
   ) {}
 
-  public async signIn(
-    loginDto: SignInUserDto,
-  ): Promise<any | { status: number; message: string }> {
-    const userData = await this.userService.findByEmail(loginDto.email);
+  public async signIn(signInUserDto: SignInUserDto): Promise<ResponseDto> {
+    const userData = await this.userService.findByEmail(
+      signInUserDto.email.toLowerCase(),
+    );
     if (!userData) {
-      throw new UnauthorizedException();
+      return {
+        message: MessagesEnum.SIGN_IN_FAILED,
+        status: HttpStatus.UNAUTHORIZED,
+      };
     }
 
     const isPasswordValid = await bcrypt.compare(
-      loginDto.password,
+      signInUserDto.password,
       userData.password,
     );
 
     if (!isPasswordValid) {
       return {
-        message: 'Authentication failed. Wrong password',
-        status: 412,
+        message: MessagesEnum.SIGN_IN_FAILED,
+        status: HttpStatus.UNAUTHORIZED,
       };
     }
 
-    const payload: JwtPayload = {
+    const payload: JwtPayloadInterface = {
       userId: userData.id,
     };
 
     const accessToken = this.jwtService.sign(payload);
 
     return {
-      accessToken: accessToken,
-      status: 200,
+      accessToken,
+      status: HttpStatus.OK,
     };
   }
 }

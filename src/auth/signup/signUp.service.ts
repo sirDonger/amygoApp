@@ -8,12 +8,13 @@ import { UserService } from '../../user/user.service';
 export class SignUpService {
   constructor(private readonly usersService: UserService) {}
 
-  public async signup(registerUserDto: SignupUserDto): Promise<UserDto> {
-    const saltRounds = 10;
-    const hash = await bcrypt.hash(registerUserDto.password, saltRounds);
-
-    registerUserDto.password = hash;
-
-    return this.usersService.create(registerUserDto);
+  public async signup(registerUserDto: SignupUserDto, image): Promise<UserDto> {
+    registerUserDto.password = await bcrypt.hash(registerUserDto.password, 10);
+    registerUserDto.email = registerUserDto.email.toLowerCase();
+    try {
+      return this.usersService.create(registerUserDto, image);
+    } catch (err) {
+      throw err;
+    }
   }
 }

@@ -1,5 +1,4 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
-import { IsString, MaxLength } from 'class-validator';
 
 @Entity()
 export class User {
@@ -7,8 +6,6 @@ export class User {
   id: string;
 
   @Column()
-  @IsString()
-  @MaxLength(30)
   name: string;
 
   @Column()
@@ -20,13 +17,20 @@ export class User {
   email: string;
 
   @Column({
+    nullable: true,
+    default: 'https://www.freedigitalphotos.net/images/img/homepage/394230.jpg',
+  })
+  profileImage: string;
+
+  @Column({
     length: 15,
     unique: true,
   })
   phoneNumber: string;
 
-  @Column({
-    length: 60,
-  })
+  @Column()
   password: string;
+
+  @Column({ nullable: true })
+  emergencyContact: string;
 }

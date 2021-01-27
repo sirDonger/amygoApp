@@ -7,7 +7,8 @@ import { UserService } from '../../user/user.service';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
-import { JwtStrategy } from './jwt.strategy';
+import { JwtStrategyConfig } from './jwt.strategy.config';
+import { FileUploadService } from '../../helpers/file-upload';
 
 @Module({
   imports: [
@@ -23,8 +24,8 @@ import { JwtStrategy } from './jwt.strategy';
       defaultStrategy: 'jwt',
     }),
   ],
-  providers: [SignInService, UserService, JwtStrategy],
+  providers: [SignInService, UserService, JwtStrategyConfig, FileUploadService],
   controllers: [SignInController],
-  exports: [PassportModule, JwtStrategy],
+  exports: [PassportModule, JwtStrategyConfig],
 })
 export class SignInModule {}

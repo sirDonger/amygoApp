@@ -1,34 +1,42 @@
-import { Controller, Post, Body, Res, HttpStatus } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Res,
+  HttpStatus,
+  UseInterceptors,
+  UploadedFile,
+} from '@nestjs/common';
 import { SignUpService } from './signUp.service';
 import { SignupUserDto } from './dto/signup.user.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { MessagesEnum } from '../messagesEnum';
 
 @Controller('/auth/signUp')
 export class SignupController {
   constructor(private readonly signupService: SignUpService) {}
 
   @Post()
+  @UseInterceptors(FileInterceptor('profileImage'))
   public async register(
     @Res() res,
-    @Body() registerUserDto: SignupUserDto,
-  ): Promise<any> {
+    @UploadedFile() image,
+    @Body() signupUserDto: SignupUserDto,
+  ): Promise<void> {
     try {
-      if (registerUserDto.password == registerUserDto.confirm_password) {
-        await this.signupService.signup(registerUserDto);
-        return res.status(HttpStatus.OK).json({
-          message: 'User created successfully!',
-          status: 200,
-        });
-      } else {
-        return res.status(HttpStatus.PRECONDITION_FAILED).json({
-          message: 'Password was not confirmed',
-          status: 412,
-        });
+      if (image) {
+        image.originalname = Date.now() + image.originalname;
+        signupUserDto.profileImage =
+          process.env.S3_BUCKET_URL + image.originalname;
       }
-    } catch (err) {
-      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-        message: err,
-        status: 500,
+
+      await this.signupService.signup(signupUserDto, image);
+
+      res.status(HttpStatus.CREATED).json({
+        message: MessagesEnum.NEW_USER_CREATED,
       });
+    } catch (err) {
+      res.status(err.status).json({ message: err.message });
     }
   }
 }
