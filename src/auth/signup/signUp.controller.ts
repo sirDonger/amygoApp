@@ -10,8 +10,8 @@ import {
 import { SignUpService } from './signUp.service';
 import { SignupUserDto } from './dto/signup.user.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { Messages } from '../messagesEnum/messages';
-import { FileUploadService } from '../../helpers/file-upload/file-upload.service';
+import { MessagesEnum } from '../messagesEnum';
+import { FileUploadService } from '../../helpers/file-upload';
 
 @Controller('/auth/signUp')
 export class SignupController {
@@ -26,14 +26,8 @@ export class SignupController {
     @Res() res,
     @UploadedFile() image,
     @Body() signupUserDto: SignupUserDto,
-  ): Promise<any> {
+  ): Promise<void> {
     try {
-      if (signupUserDto.password !== signupUserDto.confirm_password) {
-        return res.status(HttpStatus.PRECONDITION_FAILED).json({
-          message: Messages.PASSWORDS_NOT_MATCH,
-        });
-      }
-
       if (image) {
         image.originalname = Date.now() + image.originalname;
         signupUserDto.profileImage =
@@ -41,13 +35,16 @@ export class SignupController {
       }
 
       await this.signupService.signup(signupUserDto);
-      await this.fileUploadService.upload(image);
 
-      return res.status(HttpStatus.CREATED).json({
-        message: Messages.NEW_USER_CREATED,
+      if (image) {
+        await this.fileUploadService.upload(image);
+      }
+
+      res.status(HttpStatus.CREATED).json({
+        message: MessagesEnum.NEW_USER_CREATED,
       });
     } catch (err) {
-      return res.json(err);
+      res.status(err.status).json({ message: err.message });
     }
   }
 }

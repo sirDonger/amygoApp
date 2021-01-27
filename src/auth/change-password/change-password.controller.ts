@@ -9,7 +9,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ChangePasswordService } from './change-password.service';
-import { ChangePasswordDto } from './dto/change-passwordDto';
+import { ChangePasswordDto } from './dto/change-password.dto';
 import { AuthGuard } from '@nestjs/passport';
 import {
   ApiAcceptedResponse,
@@ -40,7 +40,7 @@ export class ChangePasswordController {
     @Body() changePasswordDto: ChangePasswordDto,
     @Res() res,
     @Req() req,
-  ): Promise<any> {
+  ): Promise<void> {
     try {
       const { id } = req.user;
       const response = await this.changePasswordService.changePassword(

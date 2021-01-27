@@ -3,8 +3,8 @@ import { UserService } from '../../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { SignInUserDto } from './dto/signIn.user.dto';
 import * as bcrypt from 'bcryptjs';
-import { JwtPayload } from './interfaces/jwt.payload';
-import { Messages } from '../messagesEnum/messages';
+import { JwtPayloadInterface } from './interfaces/jwt.payload.interface';
+import { MessagesEnum } from '../messagesEnum';
 
 @Injectable()
 export class SignInService {
@@ -15,11 +15,11 @@ export class SignInService {
 
   public async signIn(
     signInUserDto: SignInUserDto,
-  ): Promise<any | { status: number; message: string; accessToken?: string }> {
+  ): Promise<{ status: number; message?: string; accessToken?: string }> {
     const userData = await this.userService.findByEmail(signInUserDto.email);
     if (!userData) {
       return {
-        message: Messages.SIGN_IN_FAILED,
+        message: MessagesEnum.SIGN_IN_FAILED,
         status: HttpStatus.UNAUTHORIZED,
       };
     }
@@ -31,19 +31,19 @@ export class SignInService {
 
     if (!isPasswordValid) {
       return {
-        message: Messages.SIGN_IN_FAILED,
+        message: MessagesEnum.SIGN_IN_FAILED,
         status: HttpStatus.UNAUTHORIZED,
       };
     }
 
-    const payload: JwtPayload = {
+    const payload: JwtPayloadInterface = {
       userId: userData.id,
     };
 
     const accessToken = this.jwtService.sign(payload);
 
     return {
-      accessToken: accessToken,
+      accessToken,
       status: HttpStatus.OK,
     };
   }

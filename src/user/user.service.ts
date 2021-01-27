@@ -9,7 +9,7 @@ import { User } from './entities/user.entity';
 import { UserDto } from './dto/user.dto';
 import { Repository } from 'typeorm';
 import { SignupUserDto } from '../auth/signup/dto/signup.user.dto';
-import { ChangeProfileDto } from '../auth/change-profile/dto/changeProfileDto';
+import { ChangeProfileDto } from '../auth/change-profile/dto/changeProfile.dto';
 
 @Injectable()
 export class UserService {
@@ -51,7 +51,7 @@ export class UserService {
       const { password, ...rest } = user;
       return rest;
     } catch (err) {
-      throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException(err.detail, HttpStatus.CONFLICT);
     }
   }
 

@@ -10,6 +10,7 @@ export class SignUpService {
 
   public async signup(registerUserDto: SignupUserDto): Promise<UserDto> {
     registerUserDto.password = await bcrypt.hash(registerUserDto.password, 10);
+    registerUserDto.email = registerUserDto.email.toLowerCase();
 
     return this.usersService.create(registerUserDto);
   }

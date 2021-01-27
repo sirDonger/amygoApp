@@ -4,7 +4,7 @@ import { ChangeProfileService } from './change-profile.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '../../user/entities/user.entity';
 import { UserService } from '../../user/user.service';
-import { FileUploadService } from '../../helpers/file-upload/file-upload.service';
+import { FileUploadService } from '../../helpers/file-upload';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User])],

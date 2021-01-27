@@ -1,6 +1,6 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { Messages } from '../messagesEnum/messages';
-import { ChangeProfileDto } from './dto/changeProfileDto';
+import { MessagesEnum } from '../messagesEnum';
+import { ChangeProfileDto } from './dto/changeProfile.dto';
 import { UserService } from '../../user/user.service';
 
 @Injectable()
@@ -13,7 +13,7 @@ export class ChangeProfileService {
     const user = await this.userService.findById(userId);
     if (!user) {
       return {
-        message: Messages.SIGN_IN_FAILED,
+        message: MessagesEnum.SIGN_IN_FAILED,
         status: HttpStatus.UNAUTHORIZED,
       };
     }

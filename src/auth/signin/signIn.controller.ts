@@ -27,9 +27,8 @@ export class SignInController {
   public async signIn(
     @Body() signInUserDto: SignInUserDto,
     @Res() res,
-  ): Promise<any> {
+  ): Promise<void> {
     try {
-      console.log(signInUserDto, 'signInUserDto');
       const response = await this.signInService.signIn(signInUserDto);
       res
         .status(response.status)

@@ -16,11 +16,6 @@ export class ChangeProfileDto {
   @MaxLength(255)
   profileImage: string;
 
-  // @IsString()
-  // @IsOptional()
-  // @MaxLength(15)
-  // phoneNumber: string;
-
   @IsString()
   @IsOptional()
   @MaxLength(15)

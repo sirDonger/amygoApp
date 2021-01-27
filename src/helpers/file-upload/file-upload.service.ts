@@ -5,11 +5,12 @@ import {
 } from '@nestjs/common';
 import { S3 } from 'aws-sdk';
 import { Logger } from '@nestjs/common';
-import {constant} from '../../constants/constants'
+import { constant } from '../../constants';
 
 @Injectable()
 export class FileUploadService {
   async upload(file) {
+    console.log('upload started');
     this.isFileValid(file);
     const { originalname } = file;
     const bucketS3 = process.env.S3_BUCKET_NAME;
@@ -43,12 +44,12 @@ export class FileUploadService {
   }
 
   isFileValid(file) {
-    if (file.size > constant.MAX_FILE_SIZE){
-      throw new PayloadTooLargeException()
+    if (file.size > constant.MAX_FILE_SIZE) {
+      throw new PayloadTooLargeException();
     }
 
-    if(!constant.ALLOWED_MIME_TYPES.includes(file.mimetype)){
-      throw new UnsupportedMediaTypeException()
+    if (!constant.ALLOWED_MIME_TYPES.includes(file.mimetype)) {
+      throw new UnsupportedMediaTypeException();
     }
   }
 
@@ -56,22 +57,27 @@ export class FileUploadService {
     const s3 = this.getS3();
     const params = {
       Bucket: process.env.S3_BUCKET_NAME,
-      Key: imageName.slice(process.env.S3_BUCKET_URL.length)
-    }
+      Key: imageName.slice(process.env.S3_BUCKET_URL.length),
+    };
 
     return new Promise((resolve, reject) => {
-      s3.createBucket({
-        Bucket: process.env.S3_BUCKET_NAME
-      }, function() {
-        s3.deleteObject(params, function(err, data) {
-          if (err) console.log(err);
-          else
-            console.log("Successfully deleted file from bucket");
-            console.log(data);
-            resolve(data)
-        });
-      });
-      return
+      s3.createBucket(
+        {
+          Bucket: process.env.S3_BUCKET_NAME,
+        },
+        function () {
+          s3.deleteObject(params, function (err, data) {
+            if (err) {
+              reject(err.message);
+              console.log(err);
+            } else {
+              console.log(data);
+              resolve(data);
+            }
+          });
+        },
+      );
+      return;
     });
   }
 }

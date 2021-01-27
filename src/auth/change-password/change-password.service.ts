@@ -1,10 +1,10 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { ChangePasswordDto } from './dto/change-passwordDto';
+import { ChangePasswordDto } from './dto/change-password.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../../user/entities/user.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
-import { Messages } from '../messagesEnum/messages';
+import { MessagesEnum } from '../messagesEnum';
 
 @Injectable()
 export class ChangePasswordService {
@@ -12,20 +12,23 @@ export class ChangePasswordService {
     @InjectRepository(User)
     private userRepository: Repository<User>,
   ) {}
-  async changePassword(changePasswordDto: ChangePasswordDto, userId: string) {
-    const { email, password, newPassword } = changePasswordDto;
-    const user = await this.userRepository.findOne({ email });
+  async changePassword(
+    changePasswordDto: ChangePasswordDto,
+    userId: string,
+  ): Promise<{ message: string; status: number }> {
+    const { password, newPassword } = changePasswordDto;
+    const user = await this.userRepository.findOne(userId);
 
     if (!user) {
       return {
-        message: Messages.EMAIL_NOT_EXISTS,
+        message: MessagesEnum.EMAIL_NOT_EXISTS,
         status: HttpStatus.PRECONDITION_FAILED,
       };
     }
 
     if (user.id !== userId) {
       return {
-        message: Messages.NOT_ALLOWED_OPERATION,
+        message: MessagesEnum.NOT_ALLOWED_OPERATION,
         status: HttpStatus.FORBIDDEN,
       };
     }
@@ -34,7 +37,7 @@ export class ChangePasswordService {
 
     if (!isCorrectPassword) {
       return {
-        message: Messages.WRONG_PASSWORD,
+        message: MessagesEnum.WRONG_PASSWORD,
         status: HttpStatus.PRECONDITION_FAILED,
       };
     }
@@ -46,7 +49,7 @@ export class ChangePasswordService {
     });
 
     return {
-      message: Messages.PASSWORD_CHANGED,
+      message: MessagesEnum.PASSWORD_CHANGED,
       status: HttpStatus.ACCEPTED,
     };
   }
