@@ -1,11 +1,12 @@
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { SignInModule } from './auth/signin/signIn.module';
 import { typeOrmConfig } from './dbconfig/typeorm.config';
 import { UserModule } from './user/user.module';
 import { SignUpModule } from './auth/signup/signUp.module';
 import { LocationModule } from './location/location.module';
-import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { AppGateway } from './app.gateway';
 
 @Module({
   imports: [
@@ -16,5 +17,7 @@ import { ConfigModule } from '@nestjs/config';
     UserModule,
     LocationModule
   ],
+  controllers: [],
+  providers: [AppGateway]
 })
 export class AppModule {}

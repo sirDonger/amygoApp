@@ -14,7 +14,6 @@ export class LocationController{
             "from": await this.locationService.genLocation(location.from),
             "where": await this.locationService.genLocation(location.where)
         }
-
         return tripObj;
     }
 }
