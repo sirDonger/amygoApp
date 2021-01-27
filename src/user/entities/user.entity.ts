@@ -31,6 +31,6 @@ export class User {
   @Column()
   password: string;
 
-  @Column({nullable:true})
+  @Column({ nullable: true })
   emergencyContact: string;
 }
