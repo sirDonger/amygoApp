@@ -13,9 +13,7 @@ services:
       - database_network
   
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    build: ./apps/app
     volumes:
       - .:/app
     ports:
