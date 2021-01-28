@@ -10,14 +10,16 @@ export class ChangeProfileService {
   public async updateProfile(
     changeProfileDto: ChangeProfileDto,
     userId: string,
+    role: string,
   ): Promise<ResponseDto> {
-    const user = await this.userService.findById(userId);
+    const user = await this.userService.findById(userId, role);
+
     if (!user) {
       return {
         message: MessagesEnum.SIGN_IN_FAILED,
         status: HttpStatus.UNAUTHORIZED,
       };
     }
-    await this.userService.updateProfile(user, changeProfileDto);
+    await this.userService.updateProfile(user, changeProfileDto, role);
   }
 }

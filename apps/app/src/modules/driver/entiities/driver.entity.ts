@@ -34,7 +34,4 @@ export class Driver {
 
   @Column({ nullable: true })
   emergencyContact: string;
-
-  @Column({ nullable: true })
-  isLicenseConfirmed: boolean;
 }

@@ -14,14 +14,14 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { MessagesEnum } from '../../../constants/messagesEnum';
 import { FileUploadService } from '../../file-upload';
 
-@Controller('/auth/signUp')
+@Controller('/:role/auth/signUp')
 export class SignupController {
   constructor(
     private readonly signupService: SignUpService,
     private readonly fileUploadService: FileUploadService,
   ) {}
 
-  @Post('/:role')
+  @Post()
   @UseInterceptors(FileInterceptor('profileImage'))
   public async register(
     @Res() res,
@@ -29,7 +29,6 @@ export class SignupController {
     @Param('role') role: string,
     @Body() signupUserDto: SignupUserDto,
   ): Promise<void> {
-    console.log(role);
     try {
       if (image) {
         this.fileUploadService.isFileValid(image);
@@ -39,12 +38,16 @@ export class SignupController {
       }
 
       await this.signupService.signupUser(signupUserDto, role);
+
       if (image) {
         await this.fileUploadService.upload(image);
       }
 
       res.status(HttpStatus.CREATED).json({
-        message: MessagesEnum.NEW_USER_CREATED,
+        message:
+          role === 'user'
+            ? MessagesEnum.NEW_USER_CREATED
+            : MessagesEnum.NEW_DRIVER_CREATED,
       });
     } catch (err) {
       res.status(err.status).json({ message: err.message });

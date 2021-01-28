@@ -3,6 +3,7 @@ import {
   Controller,
   HttpStatus,
   InternalServerErrorException,
+  Param,
   Post,
   Req,
   Res,
@@ -16,13 +17,11 @@ import {
   ApiBadRequestResponse,
   ApiBearerAuth,
   ApiForbiddenResponse,
-  ApiParam,
   ApiPreconditionFailedResponse,
-  ApiProperty,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 
-@Controller('auth/change-password')
+@Controller('/:role/auth/change-password')
 export class ChangePasswordController {
   constructor(private readonly changePasswordService: ChangePasswordService) {}
 
@@ -39,6 +38,7 @@ export class ChangePasswordController {
   @ApiForbiddenResponse({ description: 'Token should belongs to user' })
   @UseGuards(AuthGuard('jwt'))
   public async changePassword(
+    @Param('role') role,
     @Body() changePasswordDto: ChangePasswordDto,
     @Res() res,
     @Req() req,
@@ -48,6 +48,7 @@ export class ChangePasswordController {
       const response = await this.changePasswordService.changePassword(
         changePasswordDto,
         id,
+        role,
       );
 
       res.status(response.status).json({ message: response.message });

@@ -14,9 +14,13 @@ export class SignInService {
     private readonly jwtService: JwtService,
   ) {}
 
-  public async signIn(signInUserDto: SignInUserDto): Promise<ResponseDto> {
+  public async signIn(
+    signInUserDto: SignInUserDto,
+    role: string,
+  ): Promise<ResponseDto> {
     const userData = await this.userService.findByEmail(
       signInUserDto.email.toLowerCase(),
+      role,
     );
     if (!userData) {
       return {

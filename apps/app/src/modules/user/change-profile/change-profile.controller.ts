@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   HttpStatus,
+  Param,
   Post,
   Req,
   Res,
@@ -16,7 +17,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { FileUploadService } from '../../file-upload';
 import { UserService } from '../user.service';
 
-@Controller('user/profile/update')
+@Controller('/:role/profile/update')
 export class ChangeProfileController {
   constructor(
     private readonly changeProfileService: ChangeProfileService,
@@ -29,12 +30,14 @@ export class ChangeProfileController {
   @UseInterceptors(FileInterceptor('profileImage'))
   public async updateProfile(
     @Body() changeProfileDto: ChangeProfileDto,
+    @Param('role') role,
     @UploadedFile() image,
     @Req() req,
     @Res() res,
   ): Promise<void> {
     try {
       const { id } = req.user;
+      console.log(id);
 
       if (image) {
         this.fileUploadService.isFileValid(image);
@@ -42,13 +45,13 @@ export class ChangeProfileController {
         changeProfileDto.profileImage =
           process.env.S3_BUCKET_URL + image.originalname;
 
-        const { profileImage } = await this.userService.findById(id);
+        const { profileImage } = await this.userService.findById(id, role);
 
         await this.fileUploadService.delete(profileImage);
         await this.fileUploadService.upload(image);
       }
 
-      await this.changeProfileService.updateProfile(changeProfileDto, id);
+      await this.changeProfileService.updateProfile(changeProfileDto, id, role);
 
       res.status(HttpStatus.NO_CONTENT).send();
     } catch (err) {

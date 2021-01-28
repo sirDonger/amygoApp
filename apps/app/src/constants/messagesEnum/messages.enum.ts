@@ -6,5 +6,6 @@ export enum MessagesEnum {
   PASSWORD_CHANGED = 'Congrats, password was successfully changed!',
   NOT_ALLOWED_OPERATION = 'User cant change values of another user!',
   NEW_USER_CREATED = 'Congrats, new user created!',
+  NEW_DRIVER_CREATED = 'Congrats, new driver created!',
   PROFILE_CHANGED = 'You successfully changed your profile',
 }

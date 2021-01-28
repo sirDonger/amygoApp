@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Res } from '@nestjs/common';
+import { Body, Controller, Param, Post, Res } from '@nestjs/common';
 import { SignInUserDto } from './dto/signIn.user.dto';
 import { SignInService } from './signIn.service';
 import {
@@ -8,7 +8,7 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 
-@Controller('auth/signIn')
+@Controller('/:role/auth/signIn')
 export class SignInController {
   constructor(private readonly signInService: SignInService) {}
 
@@ -18,11 +18,13 @@ export class SignInController {
   @ApiNotFoundResponse({ description: 'This email is not registered yet' })
   @ApiUnauthorizedResponse({ description: 'Email or password is incorrect!' })
   public async signIn(
+    @Param('role') role,
     @Body() signInUserDto: SignInUserDto,
     @Res() res,
   ): Promise<void> {
     try {
-      const response = await this.signInService.signIn(signInUserDto);
+      const response = await this.signInService.signIn(signInUserDto, role);
+
       res
         .status(response.status)
         .json({ message: response.message, accessToken: response.accessToken });
