@@ -16,13 +16,13 @@ export function MatchTwoFields(
       propertyName,
       options: validationOptions,
       constraints: [property],
-      validator: MatchConstraint,
+      validator: MatchTwoFieldsConstraint,
     });
   };
 }
 
 @ValidatorConstraint({ name: 'MatchTwoFields' })
-export class MatchConstraint implements ValidatorConstraintInterface {
+export class MatchTwoFieldsConstraint implements ValidatorConstraintInterface {
   validate(value: any, args: ValidationArguments) {
     const [relatedPropertyName] = args.constraints;
     const relatedValue = (args.object as any)[relatedPropertyName];
