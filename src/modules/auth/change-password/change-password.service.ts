@@ -2,24 +2,21 @@ import { HttpStatus, Injectable } from '@nestjs/common';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../../user/entities/user.entity';
-import { Repository } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
 import { MessagesEnum } from '../../../constants/messagesEnum';
 import { ResponseDto } from '../dtoResponse/response.dto';
+import { UserService } from '../../user/user.service';
 
 @Injectable()
 export class ChangePasswordService {
-  constructor(
-    @InjectRepository(User)
-    private userRepository: Repository<User>,
-  ) {}
+  constructor(private userService: UserService) {}
   async changePassword(
     changePasswordDto: ChangePasswordDto,
     userId: string,
   ): Promise<ResponseDto> {
     const { password, newPassword } = changePasswordDto;
-    const user = await this.userRepository.findOne(userId);
-
+    const user = await this.userService.findById(userId);
+    console.log(user);
     if (!user) {
       return {
         message: MessagesEnum.EMAIL_NOT_EXISTS,
@@ -45,9 +42,7 @@ export class ChangePasswordService {
 
     const newHashedPassword = await bcrypt.hash(newPassword, 10);
 
-    await this.userRepository.update(user, {
-      password: newHashedPassword,
-    });
+    await this.userService.changePassword(user, newHashedPassword);
 
     return {
       message: MessagesEnum.PASSWORD_CHANGED,

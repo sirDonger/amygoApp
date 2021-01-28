@@ -56,18 +56,13 @@ export class FileUploadService {
       Key: imageName.slice(process.env.S3_BUCKET_URL.length),
     };
 
-    await s3.createBucket(
-      {
-        Bucket: process.env.S3_BUCKET_NAME,
-      },
-      function () {
-        s3.deleteObject(params, function (err, data) {
-          if (err) {
-            throw new ServiceUnavailableException(err);
-          }
-          return data;
-        });
-      },
-    );
+    await s3.createBucket({ Bucket: process.env.S3_BUCKET_NAME }, function () {
+      s3.deleteObject(params, function (err, data) {
+        if (err) {
+          throw new ServiceUnavailableException(err);
+        }
+        return data;
+      });
+    });
   }
 }

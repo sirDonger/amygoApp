@@ -16,7 +16,9 @@ import {
   ApiBadRequestResponse,
   ApiBearerAuth,
   ApiForbiddenResponse,
+  ApiParam,
   ApiPreconditionFailedResponse,
+  ApiProperty,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 
@@ -50,6 +52,7 @@ export class ChangePasswordController {
 
       res.status(response.status).json({ message: response.message });
     } catch (err) {
+      console.log(err);
       throw new InternalServerErrorException(
         err,
         HttpStatus.BAD_REQUEST.toString(),

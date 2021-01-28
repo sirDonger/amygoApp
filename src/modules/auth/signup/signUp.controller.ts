@@ -6,12 +6,13 @@ import {
   HttpStatus,
   UseInterceptors,
   UploadedFile,
+  Param,
 } from '@nestjs/common';
 import { SignUpService } from './signUp.service';
 import { SignupUserDto } from './dto/signup.user.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { MessagesEnum } from '../../../constants/messagesEnum';
-import { FileUploadService } from '../../../helpers/file-upload';
+import { FileUploadService } from '../../file-upload';
 
 @Controller('/auth/signUp')
 export class SignupController {
@@ -20,13 +21,15 @@ export class SignupController {
     private readonly fileUploadService: FileUploadService,
   ) {}
 
-  @Post()
+  @Post('/:role')
   @UseInterceptors(FileInterceptor('profileImage'))
   public async register(
     @Res() res,
     @UploadedFile() image,
+    @Param('role') role: string,
     @Body() signupUserDto: SignupUserDto,
   ): Promise<void> {
+    console.log(role);
     try {
       if (image) {
         this.fileUploadService.isFileValid(image);
@@ -35,7 +38,7 @@ export class SignupController {
           process.env.S3_BUCKET_URL + image.originalname;
       }
 
-      await this.signupService.signup(signupUserDto);
+      await this.signupService.signupUser(signupUserDto, role);
       if (image) {
         await this.fileUploadService.upload(image);
       }

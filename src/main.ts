@@ -2,6 +2,8 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import * as rateLimit from 'express-rate-limit';
+import {constant} from './constants/'
 
 (async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -15,6 +17,13 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
     }),
   );
   const configService = app.get('ConfigService');
+
+  app.use(
+    rateLimit({
+      windowMs: constant.RATE_LIMIT_SECONDS,
+      max: constant.RATE_LIMIT_MAX_REQUESTS,
+    }),
+  );
 
   const config = new DocumentBuilder()
     .setTitle('API endpoints description')

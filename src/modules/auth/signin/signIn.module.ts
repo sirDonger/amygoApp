@@ -8,12 +8,13 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategyConfig } from './jwt.strategy.config';
-import { FileUploadService } from '../../../helpers/file-upload';
+import { FileUploadService } from '../../file-upload';
+import { Driver } from '../../driver/entiities/driver.entity';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([User, Driver]),
     JwtModule.register({
       secret: process.env.JWT_ACCESS_SECRET,
       signOptions: {

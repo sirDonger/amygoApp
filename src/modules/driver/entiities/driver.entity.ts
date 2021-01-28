@@ -2,7 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 import { constant } from '../../../constants';
 
 @Entity()
-export class User {
+export class Driver {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -34,4 +34,7 @@ export class User {
 
   @Column({ nullable: true })
   emergencyContact: string;
+
+  @Column({ nullable: true })
+  isLicenseConfirmed: boolean;
 }

@@ -5,5 +5,6 @@ import { ChangePasswordModule } from './change-password/change-password.module';
 
 @Module({
   imports: [SignInModule, SignUpModule, ChangePasswordModule],
+  exports: [SignInModule, SignUpModule, ChangePasswordModule],
 })
 export class AuthModule {}

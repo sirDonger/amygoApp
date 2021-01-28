@@ -13,7 +13,7 @@ import { ChangeProfileService } from './change-profile.service';
 import { ChangeProfileDto } from './dto/changeProfile.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { FileUploadService } from '../../../helpers/file-upload';
+import { FileUploadService } from '../../file-upload';
 import { UserService } from '../user.service';
 
 @Controller('user/profile/update')
