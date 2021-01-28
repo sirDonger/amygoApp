@@ -16,7 +16,7 @@ export class RedbrockerController {
   @MessagePattern('lastLocation')
   async getLocation(data: object): Promise<object>{
     this.logger.log('Last location: ' + data);
-    console.log('start');
-    return this.redappService.getLocation(data);
+    const result = await this.redappService.getLocation(data);
+    return result;
   }
 }

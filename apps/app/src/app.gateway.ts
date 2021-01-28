@@ -16,9 +16,7 @@ export class AppGateway implements OnGatewayInit {
         this.client = ClientProxyFactory.create({
             transport: Transport.REDIS,
             options: {
-                url: "redis://redis-brocker:6379",
-                retryAttempts: 10,
-                retryDelay: 3000,
+                url: "redis://redis-brocker:6379"
             }
         })
     }
@@ -31,9 +29,9 @@ export class AppGateway implements OnGatewayInit {
     }
 
     @SubscribeMessage('lastknownLocation')
-    handleLocation(client: Socket, data: object){
-        var location = data;
-        this.server.emit('lastknownLocation', location);
-        return this.client.emit('lastLocation', JSON.stringify(data));
+    async handleLocation(client: Socket, data: object): Promise<object>{
+        const response = await this.client.send('lastLocation', JSON.stringify(data)).toPromise();
+        this.server.emit('lastknownLocation', response);
+        return response;
     }
 }

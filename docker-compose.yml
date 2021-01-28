@@ -37,6 +37,13 @@ services:
     networks:
       - cache_network
 
+  microservice:
+    build: ./apps/redbrocker
+    volumes: 
+      - .:/microservice
+    networks:
+      - cache_network
+
 networks:
   database_network:
     driver: bridge

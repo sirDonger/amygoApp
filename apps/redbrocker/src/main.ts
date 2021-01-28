@@ -7,8 +7,8 @@ const logger = new Logger('Redis');
 
 const microserviceOptions = {
   transport: Transport.REDIS,
-  option:{
-    url: "redis://redis-brocker:6379"
+  options: {
+    url:"redis://redis-brocker:6379"
   }
 }
 
