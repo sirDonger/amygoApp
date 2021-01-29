@@ -8,15 +8,18 @@ const logger = new Logger('Redis');
 const microserviceOptions = {
   transport: Transport.REDIS,
   options: {
-    url:"redis://redis-brocker:6379"
-  }
-}
+    url: 'redis://redis-brocker:6379',
+  },
+};
 
 async function bootstrap() {
-  const app = await NestFactory.createMicroservice(RedbrockerModule, microserviceOptions);
+  const app = await NestFactory.createMicroservice(
+    RedbrockerModule,
+    microserviceOptions,
+  );
   app.listen(() => {
-    logger.log('Microservice is listening...')
-  })
+    logger.log('Microservice is listening...');
+  });
 }
 
 bootstrap();

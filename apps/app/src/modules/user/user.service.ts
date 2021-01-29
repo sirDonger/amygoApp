@@ -20,40 +20,71 @@ export class UserService {
     private driverRepository: Repository<Driver>,
   ) {}
 
-  public async findByEmail(email: string): Promise<User> {
-    let user = await this.userRepository.findOne({
-      where: {
-        email,
-      },
-    });
+  public async findByEmail(email: string, role: string): Promise<User> {
+    let user;
+    switch (role) {
+      case 'user': {
+        user = await this.userRepository.findOne({
+          where: {
+            email,
+          },
+        });
+        break;
+      }
+      case 'driver': {
+        user = await this.driverRepository.findOne({
+          where: {
+            email,
+          },
+        });
+        break;
+      }
+    }
 
     if (!user) {
-      user = await this.driverRepository.findOne({
-        where: {
-          email,
-        },
-      });
       if (!user) throw new NotFoundException(`User ${email} not registered`);
     }
     return user;
   }
 
-  public async findById(userId: string): Promise<User> {
-    console.log('find by id');
-    let user = await this.userRepository.findOne({
-      where: {
-        id: userId,
-      },
-    });
-    if (!user) {
-      user = await this.driverRepository.findOne({
+  public async findById(userId: string, role?: string): Promise<User> {
+    let user;
+    if (!role) {
+      user = await this.userRepository.findOne({
         where: {
           id: userId,
         },
       });
       if (!user) {
-        throw new NotFoundException(`User #${userId} not found`);
+        user = await this.driverRepository.findOne({
+          where: {
+            id: userId,
+          },
+        });
       }
+    } else {
+      switch (role) {
+        case 'user': {
+          user = await this.userRepository.findOne({
+            where: {
+              id: userId,
+            },
+          });
+          break;
+        }
+        case 'driver': {
+          user = await this.driverRepository.findOne({
+            where: {
+              id: userId,
+            },
+          });
+          break;
+        }
+      }
+    }
+
+    if (!user) {
+      throw new NotFoundException(`User #${userId} not found`);
     }
     return user;
   }
@@ -79,18 +110,33 @@ export class UserService {
     }
   }
 
-  public async updateProfile(user, userData: ChangeProfileDto) {
-    console.log(user);
-    await this.userRepository.update(user, userData);
+  public async updateProfile(user, userData: ChangeProfileDto, role: string) {
+    switch (role) {
+      case 'user': {
+        await this.userRepository.update(user, userData);
+        break;
+      }
+      case 'driver': {
+        await this.driverRepository.update(user, userData);
+        break;
+      }
+    }
   }
 
-  async changePassword(user, newHashedPassword: string) {
-    console.log(user);
-    await this.userRepository.update(user, {
-      password: newHashedPassword,
-    });
-    await this.driverRepository.update(user, {
-      password: newHashedPassword,
-    });
+  async changePassword(user, newHashedPassword: string, role: string) {
+    switch (role) {
+      case 'user': {
+        await this.userRepository.update(user, {
+          password: newHashedPassword,
+        });
+        break;
+      }
+      case 'driver': {
+        await this.driverRepository.update(user, {
+          password: newHashedPassword,
+        });
+        break;
+      }
+    }
   }
 }
