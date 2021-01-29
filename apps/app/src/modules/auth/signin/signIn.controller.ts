@@ -5,6 +5,7 @@ import {
   ApiBadRequestResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
+  ApiParam,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 
@@ -18,7 +19,7 @@ export class SignInController {
   @ApiNotFoundResponse({ description: 'This email is not registered yet' })
   @ApiUnauthorizedResponse({ description: 'Email or password is incorrect!' })
   public async signIn(
-    @Param('role') role,
+    @Param('role') role: string,
     @Body() signInUserDto: SignInUserDto,
     @Res() res,
   ): Promise<void> {

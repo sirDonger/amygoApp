@@ -38,7 +38,7 @@ export class ChangePasswordController {
   @ApiForbiddenResponse({ description: 'Token should belongs to user' })
   @UseGuards(AuthGuard('jwt'))
   public async changePassword(
-    @Param('role') role,
+    @Param('role') role: string,
     @Body() changePasswordDto: ChangePasswordDto,
     @Res() res,
     @Req() req,
