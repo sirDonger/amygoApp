@@ -20,7 +20,6 @@ services:
       - .:/app
     ports:
       - "8080:8080"
-      - "30000:9229"
     depends_on:
       - db
     tty: true
