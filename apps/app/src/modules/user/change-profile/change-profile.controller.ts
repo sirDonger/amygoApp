@@ -16,6 +16,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FileUploadService } from '../../file-upload';
 import { UserService } from '../user.service';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('/:role/profile/update')
 export class ChangeProfileController {
@@ -27,10 +28,11 @@ export class ChangeProfileController {
 
   @Post()
   @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth()
   @UseInterceptors(FileInterceptor('profileImage'))
   public async updateProfile(
     @Body() changeProfileDto: ChangeProfileDto,
-    @Param('role') role,
+    @Param('role') role: string,
     @UploadedFile() image,
     @Req() req,
     @Res() res,
