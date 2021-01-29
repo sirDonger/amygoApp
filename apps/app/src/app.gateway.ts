@@ -16,7 +16,7 @@ export class AppGateway implements OnGatewayInit {
         this.client = ClientProxyFactory.create({
             transport: Transport.REDIS,
             options: {
-                url: "redis://redis-brocker:6379"
+                url: "redis://redis-brocker:6380"
             }
         })
     }
