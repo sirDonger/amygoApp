@@ -10,6 +10,7 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtStrategyConfig } from './jwt.strategy.config';
 import { FileUploadService } from '../../file-upload';
 import { Driver } from '../../driver/entiities/driver.entity';
+import { DriverService } from '../../driver/driver.service';
 
 @Module({
   imports: [
@@ -25,7 +26,13 @@ import { Driver } from '../../driver/entiities/driver.entity';
       defaultStrategy: 'jwt',
     }),
   ],
-  providers: [SignInService, UserService, JwtStrategyConfig, FileUploadService],
+  providers: [
+    SignInService,
+    UserService,
+    JwtStrategyConfig,
+    FileUploadService,
+    DriverService,
+  ],
   controllers: [SignInController],
   exports: [PassportModule, JwtStrategyConfig],
 })

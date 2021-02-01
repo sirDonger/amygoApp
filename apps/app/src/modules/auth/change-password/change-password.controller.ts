@@ -13,10 +13,11 @@ import { ChangePasswordService } from './change-password.service';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { AuthGuard } from '@nestjs/passport';
 import {
-  ApiAcceptedResponse,
   ApiBadRequestResponse,
   ApiBearerAuth,
   ApiForbiddenResponse,
+  ApiNoContentResponse,
+  ApiParam,
   ApiPreconditionFailedResponse,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
@@ -26,8 +27,10 @@ export class ChangePasswordController {
   constructor(private readonly changePasswordService: ChangePasswordService) {}
 
   @Post()
+  @UseGuards(AuthGuard('jwt'))
   @ApiBearerAuth()
-  @ApiAcceptedResponse({
+  @ApiParam({ name: 'role', enum: ['user', 'driver'] })
+  @ApiNoContentResponse({
     description: 'Congrats, you successfully changed password!',
   })
   @ApiPreconditionFailedResponse({
@@ -36,7 +39,6 @@ export class ChangePasswordController {
   @ApiUnauthorizedResponse({ description: 'Provide valid token' })
   @ApiBadRequestResponse({ description: 'Invalid payload' })
   @ApiForbiddenResponse({ description: 'Token should belongs to user' })
-  @UseGuards(AuthGuard('jwt'))
   public async changePassword(
     @Param('role') role: string,
     @Body() changePasswordDto: ChangePasswordDto,
@@ -53,7 +55,6 @@ export class ChangePasswordController {
 
       res.status(response.status).json({ message: response.message });
     } catch (err) {
-      console.log(err);
       throw new InternalServerErrorException(
         err,
         HttpStatus.BAD_REQUEST.toString(),

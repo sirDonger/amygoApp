@@ -6,10 +6,11 @@ import { SignUpService } from './signUp.service';
 import { SignupController } from './signUp.controller';
 import { FileUploadModule } from '../../file-upload/file-upload.module';
 import { Driver } from '../../driver/entiities/driver.entity';
+import { DriverService } from '../../driver/driver.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User, Driver]), FileUploadModule],
-  providers: [SignUpService, UserService],
+  providers: [SignUpService, UserService, DriverService],
   controllers: [SignupController],
 })
 export class SignUpModule {}

@@ -1,27 +1,36 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { UserService } from '../../user/user.service';
 import { JwtService } from '@nestjs/jwt';
-import { SignInUserDto } from './dto/signIn.user.dto';
+import { SignInDto } from './dto/signIn.dto';
 import * as bcrypt from 'bcryptjs';
 import { JwtPayloadInterface } from './interfaces/jwt.payload.interface';
 import { MessagesEnum } from '../../../constants/messagesEnum';
 import { ResponseDto } from '../dtoResponse/response.dto';
+import { DriverService } from '../../driver/driver.service';
 
 @Injectable()
 export class SignInService {
   constructor(
     private readonly userService: UserService,
+    private readonly driverService: DriverService,
     private readonly jwtService: JwtService,
   ) {}
 
   public async signIn(
-    signInUserDto: SignInUserDto,
+    signInUserDto: SignInDto,
     role: string,
   ): Promise<ResponseDto> {
-    const userData = await this.userService.findByEmail(
-      signInUserDto.email.toLowerCase(),
-      role,
-    );
+    let userData;
+    if (role === 'user') {
+      userData = await this.userService.findByEmail(
+        signInUserDto.email.toLowerCase(),
+      );
+    } else {
+      userData = await this.driverService.findByEmail(
+        signInUserDto.email.toLowerCase(),
+      );
+    }
+
     if (!userData) {
       return {
         message: MessagesEnum.SIGN_IN_FAILED,

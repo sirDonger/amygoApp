@@ -10,7 +10,7 @@ export class ChangePasswordDto {
     message: ValidationMessagesEnum.PASSWORD,
   })
   @ApiProperty({
-    example: 'Password123##',
+    example: 'Password123@',
     type: String,
 
     description:
@@ -24,7 +24,7 @@ export class ChangePasswordDto {
     message: ValidationMessagesEnum.PASSWORD,
   })
   @ApiProperty({
-    example: 'Password123##',
+    example: 'NewPassword123##',
     type: String,
     description:
       'New Password which consist of at least one Capital letter, one small, digit, and special symbol',
@@ -39,7 +39,7 @@ export class ChangePasswordDto {
       ValidationMessagesEnum.PASSWORD + ValidationMessagesEnum.CONFIRM_PASSWORD,
   })
   @ApiProperty({
-    example: 'Password123##',
+    example: 'NewPassword123##',
     type: String,
     description:
       'Password which consist of at least one Capital letter, one small, digit, and special symbol',
