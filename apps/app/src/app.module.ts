@@ -9,6 +9,7 @@ import { AppGateway } from './app.gateway';
 import { typeOrmConfig } from './config/dbconfig';
 import { DriverModule } from './modules/driver/driver.module';
 import { TripModule } from './modules/trip/trip.module';
+import { AdminModule } from './modules/admin/admin.module';
 
 @Module({
   imports: [
@@ -19,7 +20,8 @@ import { TripModule } from './modules/trip/trip.module';
     TypeOrmModule.forRoot(typeOrmConfig),
     LocationModule,
     DriverModule,
-    TripModule
+    TripModule,
+    AdminModule
   ],
   controllers: [],
   providers: [AppGateway],

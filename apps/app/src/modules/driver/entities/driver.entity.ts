@@ -2,6 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, OneToMany
 import { constant } from '../../../constants';
 import { Trip } from '../../trip/entities/trip.entity';
 import { Car } from './car.entity';
+import { DocumentsStatus } from '../documentStatus.enum';
 
 @Entity('driver')
 export class Driver {
@@ -42,4 +43,9 @@ export class Driver {
 
   @Column()
   isVerified: boolean;
+  @Column('text', { array: true, default: () => 'array[]::text[]' })
+  documents: string[];
+
+  @Column({ default: DocumentsStatus.NOT_PROVIDED })
+  documentsStatus: string;
 }

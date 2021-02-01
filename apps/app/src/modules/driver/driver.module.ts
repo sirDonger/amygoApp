@@ -6,11 +6,12 @@ import { User } from '../user/entities/user.entity';
 import { Driver } from './entities/driver.entity';
 import { Car } from './entities/car.entity';
 import { Trip } from '../trip/entities/trip.entity';
+import { FileUploadService } from '../file-upload';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User, Driver, Car, Trip])],
   controllers: [DriverController],
-  providers: [DriverService],
+  providers: [DriverService, FileUploadService],
   exports: [DriverService],
 })
 export class DriverModule {}

@@ -8,6 +8,7 @@ import { CarDto } from './dto/car.dto';
 import { ChangeProfileDto } from '../change-profile/dto/changeProfile.dto';
 import { Driver } from './entities/driver.entity';
 import { Car } from './entities/car.entity';
+import { DocumentsStatus } from './documentStatus.enum';
 
 @Injectable()
 export class DriverService {
@@ -57,6 +58,10 @@ export class DriverService {
     await this.driverRepository.update(driver, userData);
   }
 
+  public async addDocuments(driver) {
+    await this.driverRepository.save(driver);
+  }
+
   async changePassword(driver, newHashedPassword: string) {
     await this.driverRepository.update(driver, {
       password: newHashedPassword,
@@ -65,5 +70,15 @@ export class DriverService {
 
   public async createCar(carDto: CarDto){
     await this.carRepository.save(carDto);
+  }
+
+  async getDriversWaitingForConfirmation() {
+    const drivers = await this.driverRepository.find({
+      where: {
+        documentsStatus: DocumentsStatus.WAITING_FOR_CONFIRMATION,
+      },
+    });
+
+    return drivers;
   }
 }
