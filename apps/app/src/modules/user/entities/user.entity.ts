@@ -34,4 +34,5 @@ export class User {
 
   @Column({ nullable: true })
   emergencyContact: string;
+  
 }

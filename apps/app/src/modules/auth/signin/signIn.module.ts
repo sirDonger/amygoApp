@@ -9,12 +9,15 @@ import { ConfigModule } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategyConfig } from './jwt.strategy.config';
 import { FileUploadService } from '../../file-upload';
-import { Driver } from '../../driver/entiities/driver.entity';
+import { Driver } from '../../driver/entities/driver.entity';
+import { DriverService } from '../../driver/driver.service';
+import { Car } from '../../driver/entities/car.entity';
+import { Trip } from '../../trip/entities/trip.entity';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    TypeOrmModule.forFeature([User, Driver]),
+    TypeOrmModule.forFeature([User, Driver, Car, Trip]),
     JwtModule.register({
       secret: process.env.JWT_ACCESS_SECRET,
       signOptions: {
@@ -25,7 +28,13 @@ import { Driver } from '../../driver/entiities/driver.entity';
       defaultStrategy: 'jwt',
     }),
   ],
-  providers: [SignInService, UserService, JwtStrategyConfig, FileUploadService],
+  providers: [
+    SignInService,
+    UserService,
+    JwtStrategyConfig,
+    FileUploadService,
+    DriverService,
+  ],
   controllers: [SignInController],
   exports: [PassportModule, JwtStrategyConfig],
 })

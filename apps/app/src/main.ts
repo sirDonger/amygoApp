@@ -3,7 +3,7 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as rateLimit from 'express-rate-limit';
-import {constant} from './constants/'
+import { constant } from './constants/';
 
 (async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -16,7 +16,6 @@ import {constant} from './constants/'
       whitelist: true,
     }),
   );
-  const configService = app.get('ConfigService');
 
   app.use(
     rateLimit({

@@ -1,5 +1,5 @@
 import { Body, Controller, Param, Post, Res } from '@nestjs/common';
-import { SignInUserDto } from './dto/signIn.user.dto';
+import { SignInDto } from './dto/signIn.dto';
 import { SignInService } from './signIn.service';
 import {
   ApiBadRequestResponse,
@@ -14,13 +14,14 @@ export class SignInController {
   constructor(private readonly signInService: SignInService) {}
 
   @Post()
+  @ApiParam({ name: 'role', enum: ['user', 'driver'] })
   @ApiBadRequestResponse({ description: 'Email should be valid' })
   @ApiOkResponse({ description: 'Successfully signed in' })
   @ApiNotFoundResponse({ description: 'This email is not registered yet' })
   @ApiUnauthorizedResponse({ description: 'Email or password is incorrect!' })
   public async signIn(
     @Param('role') role: string,
-    @Body() signInUserDto: SignInUserDto,
+    @Body() signInUserDto: SignInDto,
     @Res() res,
   ): Promise<void> {
     try {

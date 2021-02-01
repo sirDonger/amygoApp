@@ -1,7 +1,9 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, OneToMany } from 'typeorm';
 import { constant } from '../../../constants';
+import { Trip } from '../../trip/entities/trip.entity';
+import { Car } from './car.entity';
 
-@Entity()
+@Entity('driver')
 export class Driver {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -34,4 +36,10 @@ export class Driver {
 
   @Column({ nullable: true })
   emergencyContact: string;
+
+  @OneToMany(() => Trip, driver => Driver)
+  trips: Trip[]
+
+  @Column()
+  isVerified: boolean;
 }

@@ -10,12 +10,12 @@ import { ValidationMessagesEnum } from '../../../../constants/messagesEnum';
 import { MatchTwoFields } from '../../../../helpers/validators/matchTwoField.decorator';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class SignupUserDto {
+export class SignupDto {
   @IsString({ message: ValidationMessagesEnum.NAME })
-  @MaxLength(30, { message: ValidationMessagesEnum.NAME })
+  @MaxLength(40, { message: ValidationMessagesEnum.NAME })
   @ApiProperty({
     example: 'Ivan',
-    description: 'Correct name',
+    description: 'Correct name shorter than 40 characters',
   })
   name: string;
 
@@ -23,12 +23,16 @@ export class SignupUserDto {
   @MaxLength(40)
   @ApiProperty({
     example: 'Pavlov',
-    description: 'Correct surname',
+    description: 'Correct surname shorter than 40 characters',
   })
   surname: string;
 
-  @IsString()
-  @IsOptional()
+  @ApiProperty({
+    title: 'Attachment',
+    description: 'Size < 5Mb and format [jpg, png, svg, tiff, webp]',
+    type: 'file',
+    required: false,
+  })
   profileImage: string;
 
   @IsEmail()
@@ -36,7 +40,7 @@ export class SignupUserDto {
     message: ValidationMessagesEnum.EMAIL,
   })
   @ApiProperty({
-    example: 'mymaill@gmail.com',
+    example: 'mymail@gmail.com',
     description: 'Correct email address',
   })
   email: string;
@@ -45,7 +49,8 @@ export class SignupUserDto {
   @IsString()
   @ApiProperty({
     example: 'Password123@',
-    description: 'Correct password',
+    description:
+      'Correct password which include at least one capital letter, one small and  one digit ',
   })
   @Matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,60}$/, {
     message: ValidationMessagesEnum.PASSWORD,
@@ -61,7 +66,8 @@ export class SignupUserDto {
   })
   @ApiProperty({
     example: 'Password123@',
-    description: 'Correct confirmPassword',
+    description:
+      'Correct password which include at least one capital letter, one small and  one digit ',
   })
   confirmPassword: string;
 
@@ -70,11 +76,18 @@ export class SignupUserDto {
   @MaxLength(15)
   @ApiProperty({
     example: '"1526186s5"',
-    description: 'Correct phoneNumber',
+    description: 'Correct phoneNumber, shorter than 15 characters',
   })
+  //TODO custom validation
   phoneNumber: string;
 
   @IsString()
   @IsOptional()
+  @MaxLength(15)
+  @ApiProperty({
+    required: false,
+    example: '"1526186s5"',
+    description: 'Correct phoneNumber, shorter than 15 characters',
+  })
   emergencyContact: string;
 }

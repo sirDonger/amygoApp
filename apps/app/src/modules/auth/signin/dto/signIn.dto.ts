@@ -2,7 +2,7 @@ import { IsNotEmpty, IsEmail, IsString, Matches } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { ValidationMessagesEnum } from '../../../../constants/messagesEnum';
 
-export class SignInUserDto {
+export class SignInDto {
   @IsEmail()
   @Matches(/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$/, {
     message: ValidationMessagesEnum.EMAIL,
@@ -20,7 +20,7 @@ export class SignInUserDto {
       ValidationMessagesEnum.PASSWORD + ValidationMessagesEnum.CONFIRM_PASSWORD,
   })
   @ApiProperty({
-    example: 'Password123##',
+    example: 'Password123@',
     description:
       'Password which consist of at least one Capital letter, one small, digit, and special symbol',
   })

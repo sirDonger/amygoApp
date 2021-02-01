@@ -9,10 +9,17 @@ import {
   Param,
 } from '@nestjs/common';
 import { SignUpService } from './signUp.service';
-import { SignupUserDto } from './dto/signup.user.dto';
+import { SignupDto } from './dto/signup.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { MessagesEnum } from '../../../constants/messagesEnum';
 import { FileUploadService } from '../../file-upload';
+import {
+  ApiBadRequestResponse,
+  ApiConflictResponse,
+  ApiConsumes,
+  ApiCreatedResponse,
+  ApiParam,
+} from '@nestjs/swagger';
 
 @Controller('/:role/auth/signUp')
 export class SignupController {
@@ -23,11 +30,22 @@ export class SignupController {
 
   @Post()
   @UseInterceptors(FileInterceptor('profileImage'))
+  @ApiParam({ name: 'role', enum: ['user', 'driver'] })
+  @ApiConflictResponse({
+    description: 'Email or phoneNumber already exists!',
+  })
+  @ApiConsumes('multipart/form-data')
+  @ApiBadRequestResponse({
+    description:
+      'Please read a message in response ' +
+      "body, to figure out which validation constraint you didn't pass",
+  })
+  @ApiCreatedResponse({ description: 'Successfully created new user!' })
   public async register(
     @Res() res,
     @UploadedFile() image,
     @Param('role') role: string,
-    @Body() signupUserDto: SignupUserDto,
+    @Body() signupUserDto: SignupDto,
   ): Promise<void> {
     try {
       if (image) {
@@ -50,7 +68,9 @@ export class SignupController {
             : MessagesEnum.NEW_DRIVER_CREATED,
       });
     } catch (err) {
-      res.status(err.status).json({ message: err.message });
+      res
+        .status(HttpStatus.CONFLICT)
+        .json({ message: err.detail || err.message });
     }
   }
 }

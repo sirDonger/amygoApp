@@ -4,17 +4,26 @@ import * as bcrypt from 'bcryptjs';
 import { MessagesEnum } from '../../../constants/messagesEnum';
 import { ResponseDto } from '../dtoResponse/response.dto';
 import { UserService } from '../../user/user.service';
+import { DriverService } from '../../driver/driver.service';
 
 @Injectable()
 export class ChangePasswordService {
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    private readonly driverService: DriverService,
+  ) {}
   async changePassword(
     changePasswordDto: ChangePasswordDto,
     userId: string,
     role: string,
   ): Promise<ResponseDto> {
     const { password, newPassword } = changePasswordDto;
-    const user = await this.userService.findById(userId, role);
+    let user;
+    if (role === 'user') {
+      user = await this.userService.findById(userId);
+    } else {
+      user = await this.driverService.findById(userId);
+    }
     if (!user) {
       return {
         message: MessagesEnum.EMAIL_NOT_EXISTS,
@@ -40,7 +49,11 @@ export class ChangePasswordService {
 
     const newHashedPassword = await bcrypt.hash(newPassword, 10);
 
-    await this.userService.changePassword(user, newHashedPassword, role);
+    if (role === 'user') {
+      await this.userService.changePassword(user, newHashedPassword);
+    } else {
+      await this.driverService.changePassword(user, newHashedPassword);
+    }
 
     return {
       message: MessagesEnum.PASSWORD_CHANGED,
