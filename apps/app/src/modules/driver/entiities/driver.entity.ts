@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 import { constant } from '../../../constants';
+import { DocumentsStatus } from '../documentStatus.enum';
 
 @Entity()
 export class Driver {
@@ -34,4 +35,10 @@ export class Driver {
 
   @Column({ nullable: true })
   emergencyContact: string;
+
+  @Column('text', { array: true, default: () => 'array[]::text[]' })
+  documents: string[];
+
+  @Column({ default: DocumentsStatus.NOT_PROVIDED })
+  documentsStatus: string;
 }
