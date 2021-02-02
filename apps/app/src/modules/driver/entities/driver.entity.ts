@@ -1,10 +1,9 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, OneToMany } from 'typeorm';
 import { constant } from '../../../constants';
 import { Trip } from '../../trip/entities/trip.entity';
-import { Car } from './car.entity';
 import { DocumentsStatus } from '../documentStatus.enum';
 
-@Entity('driver')
+@Entity()
 export class Driver {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -43,6 +42,7 @@ export class Driver {
 
   @Column()
   isVerified: boolean;
+
   @Column('text', { array: true, default: () => 'array[]::text[]' })
   documents: string[];
 

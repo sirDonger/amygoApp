@@ -10,7 +10,7 @@ import { ValidationMessagesEnum } from '../../../../constants/messagesEnum';
 import { MatchTwoFields } from '../../../../helpers/validators/matchTwoField.decorator';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class SignupDto {
+export class SignupUserDto {
   @IsString({ message: ValidationMessagesEnum.NAME })
   @MaxLength(40, { message: ValidationMessagesEnum.NAME })
   @ApiProperty({

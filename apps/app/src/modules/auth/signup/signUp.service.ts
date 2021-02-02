@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
-import { SignupDto } from './dto/signup.dto';
+import { SignupUserDto } from './dto/signupUser.dto';
+import { SignupDriverDto } from './dto/signupDriver.dto';
 import { UserDto } from '../../user/dto/user.dto';
 import { UserService } from '../../user/user.service';
 import { DriverService } from '../../driver/driver.service';
@@ -13,14 +14,20 @@ export class SignUpService {
   ) {}
 
   public async signupUser(
-    registerUserDto: SignupDto,
-    role: string,
+    registerUserDto: SignupUserDto,
   ): Promise<UserDto> {
     registerUserDto.password = await bcrypt.hash(registerUserDto.password, 10);
     registerUserDto.email = registerUserDto.email.toLowerCase();
 
-    if (role === 'user') return this.usersService.createUser(registerUserDto);
+    return this.usersService.createUser(registerUserDto);
+  }
 
-    return this.driverService.createDriver(registerUserDto);
+  public async signupDriver(
+    registerDriverDto: SignupDriverDto,
+  ): Promise<UserDto>{
+    registerDriverDto.password = await bcrypt.hash(registerDriverDto.password, 10);
+    registerDriverDto.email = registerDriverDto.email.toLowerCase();
+    
+    return this.driverService.createDriver(registerDriverDto);
   }
 }

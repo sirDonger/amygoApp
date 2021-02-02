@@ -17,6 +17,7 @@ import {
   ApiNoContentResponse,
   ApiOkResponse,
   ApiUnauthorizedResponse,
+  ApiConflictResponse
 } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { DriverService } from './driver.service';
@@ -82,18 +83,26 @@ export class DriverController {
   }
 
   @Post('add/car')
+  @ApiBearerAuth()
+  @ApiConflictResponse({
+    description: 'Car number already exists!',
+  })
   public async createCar(
     @Body() carDto: CarDto,
-    @Res() res
+    @Res() res,
+    @Req() req
+
   ){
     try{
-      await this.driverService.createCar(carDto);
+      await this.driverService.createCar(carDto, req.user.id);
       return res.status(HttpStatus.CREATED).json({
-        message: 'Car successfully created',
+        message: 'Car was successfully created',
         status: 201
       }) 
     } catch(err){
-      return {message: err, status: res.status}
+      res
+        .status(HttpStatus.CONFLICT)
+        .json({ message: err.detail || err.message });
     }
   }
 }

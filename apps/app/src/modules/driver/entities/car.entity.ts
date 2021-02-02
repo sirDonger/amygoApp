@@ -1,7 +1,7 @@
 import {Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn} from 'typeorm';
 import { Driver } from './driver.entity';
 
-@Entity('car')
+@Entity()
 export class Car {
     @PrimaryGeneratedColumn('uuid')
     id: string;

@@ -9,7 +9,8 @@ import {
   Param,
 } from '@nestjs/common';
 import { SignUpService } from './signUp.service';
-import { SignupDto } from './dto/signup.dto';
+import { SignupUserDto } from './dto/signupUser.dto';
+import { SignupDriverDto } from './dto/signupDriver.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { MessagesEnum } from '../../../constants/messagesEnum';
 import { FileUploadService } from '../../file-upload';
@@ -21,16 +22,15 @@ import {
   ApiParam,
 } from '@nestjs/swagger';
 
-@Controller('/:role/auth/signUp')
+@Controller('/auth/signUp')
 export class SignupController {
   constructor(
     private readonly signupService: SignUpService,
     private readonly fileUploadService: FileUploadService,
   ) {}
 
-  @Post()
+  @Post('user')
   @UseInterceptors(FileInterceptor('profileImage'))
-  @ApiParam({ name: 'role', enum: ['user', 'driver'] })
   @ApiConflictResponse({
     description: 'Email or phoneNumber already exists!',
   })
@@ -41,11 +41,10 @@ export class SignupController {
       "body, to figure out which validation constraint you didn't pass",
   })
   @ApiCreatedResponse({ description: 'Successfully created new user!' })
-  public async register(
+  public async registerUser(
     @Res() res,
     @UploadedFile() image,
-    @Param('role') role: string,
-    @Body() signupUserDto: SignupDto,
+    @Body() signupUserDto: SignupUserDto,
   ): Promise<void> {
     try {
       if (image) {
@@ -54,18 +53,54 @@ export class SignupController {
         signupUserDto.profileImage =
           process.env.S3_BUCKET_URL + image.originalname;
       }
-
-      await this.signupService.signupUser(signupUserDto, role);
+      await this.signupService.signupUser(signupUserDto);
 
       if (image) {
         await this.fileUploadService.upload(image);
       }
 
       res.status(HttpStatus.CREATED).json({
-        message:
-          role === 'user'
-            ? MessagesEnum.NEW_USER_CREATED
-            : MessagesEnum.NEW_DRIVER_CREATED,
+        message:MessagesEnum.NEW_USER_CREATED
+      });
+    } catch (err) {
+      res
+        .status(HttpStatus.CONFLICT)
+        .json({ message: err.detail || err.message });
+    }
+  }
+
+  @Post('driver')
+  @UseInterceptors(FileInterceptor('profileImage'))
+  @ApiConflictResponse({
+    description: 'Email or phoneNumber already exists!',
+  })
+  @ApiConsumes('multipart/form-data')
+  @ApiBadRequestResponse({
+    description:
+      'Please read a message in response ' +
+      "body, to figure out which validation constraint you didn't pass",
+  })
+  @ApiCreatedResponse({ description: 'Successfully created new driver!' })
+  public async registerDriver(
+    @Res() res,
+    @UploadedFile() image,
+    @Body() signupDriverDto: SignupDriverDto,
+  ): Promise<void> {
+    try {
+      if (image) {
+        this.fileUploadService.isFileValid(image);
+        image.originalname = Date.now() + image.originalname;
+        signupDriverDto.profileImage =
+          process.env.S3_BUCKET_URL + image.originalname;
+      }
+      await this.signupService.signupDriver(signupDriverDto);
+
+      if (image) {
+        await this.fileUploadService.upload(image);
+      }
+
+      res.status(HttpStatus.CREATED).json({
+        message: MessagesEnum.NEW_DRIVER_CREATED
       });
     } catch (err) {
       res

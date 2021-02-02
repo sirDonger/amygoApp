@@ -3,8 +3,14 @@ import { Driver } from '../../driver/entities/driver.entity';
 
 @Entity()
 export class Trip {
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn('uuid')
     id: string;
+
+    @Column()
+    from: string;
+
+    @Column()
+    where: string;
 
     @Column()
     numberPeople: number;
