@@ -29,7 +29,7 @@ export class DriverService {
     return driver;
   }
 
-  public async findById(userId: string): Promise<User> {
+  public async findById(userId: string): Promise<Driver> {
     const driver = await this.driverRepository.findOne({
       where: {
         id: userId,
@@ -53,7 +53,7 @@ export class DriverService {
     await this.driverRepository.update(driver, userData);
   }
 
-  public async addDocuments(driver) {
+  public async saveChanges(driver) {
     await this.driverRepository.save(driver);
   }
 

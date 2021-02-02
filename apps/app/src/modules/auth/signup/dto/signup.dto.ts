@@ -33,6 +33,7 @@ export class SignupDto {
     type: 'file',
     required: false,
   })
+  @IsOptional()
   profileImage: string;
 
   @IsEmail()

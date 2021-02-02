@@ -1,5 +1,5 @@
 export enum DocumentsStatus {
-  NOT_PROVIDED,
-  WAITING_FOR_CONFIRMATION,
-  CONFIRMED,
+  NOT_PROVIDED = 'Not provided',
+  WAITING_FOR_CONFIRMATION = 'Waiting for checking',
+  CONFIRMED = 'Confirmed',
 }
