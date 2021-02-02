@@ -9,6 +9,7 @@ import { AppGateway } from './app.gateway';
 import { typeOrmConfig } from './config/dbconfig';
 import { DriverModule } from './modules/driver/driver.module';
 import { AdminModule } from './modules/admin/admin.module';
+import { PreorderTripModule } from './modules/preorder-trip/preorder-trip.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { AdminModule } from './modules/admin/admin.module';
     LocationModule,
     DriverModule,
     AdminModule,
+    PreorderTripModule,
   ],
   controllers: [],
   providers: [AppGateway],

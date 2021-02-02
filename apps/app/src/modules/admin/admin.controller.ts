@@ -8,7 +8,7 @@ import { ApiBadRequestResponse, ApiOkResponse } from '@nestjs/swagger';
 export class AdminController {
   constructor(private readonly driverService: DriverService) {}
 
-  @Get('drivers/documents-confirmation')
+  @Get('drivers/documents-for-confirmation')
   private async getDriversWaitingForConfirmation(@Res() res) {
     try {
       const drivers = await this.driverService.getDriversWaitingForConfirmation();

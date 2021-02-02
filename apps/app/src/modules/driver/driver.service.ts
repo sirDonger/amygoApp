@@ -1,6 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from '../user/entities/user.entity';
 import { Repository } from 'typeorm';
 import { SignupDto } from '../auth/signup/dto/signup.dto';
 import { UserDto } from '../user/dto/user.dto';
@@ -15,7 +14,7 @@ export class DriverService {
     private driverRepository: Repository<Driver>,
   ) {}
 
-  public async findByEmail(email: string): Promise<User> {
+  public async findByEmail(email: string): Promise<Driver> {
     const driver = await this.driverRepository.findOne({
       where: {
         email,

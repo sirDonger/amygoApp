@@ -5,6 +5,7 @@ import {
   HttpStatus,
   NotFoundException,
   Post,
+  Put,
   Req,
   Res,
   UploadedFiles,
@@ -24,12 +25,15 @@ import { FilesInterceptor } from '@nestjs/platform-express';
 import { FileUploadService } from '../file-upload';
 import { DocumentsStatus } from './documentStatus.enum';
 import { AddDocumentsDto } from './dto/addDocuments.dto';
+import { PreorderTripService } from '../preorder-trip/preorder-trip.service';
+import { AcceptPreorderTripDto } from '../preorder-trip/dto/acceptPreorderTrip.dto';
 
 @UseGuards(AuthGuard('jwt'))
 @Controller('driver')
 export class DriverController {
   constructor(
     private readonly driverService: DriverService,
+    private readonly preorderTripService: PreorderTripService,
     private readonly uploadService: FileUploadService,
   ) {}
   @Get('/profile')
@@ -41,7 +45,7 @@ export class DriverController {
       const user = await this.driverService.findById(req.user.id);
 
       if (!user) {
-        throw new NotFoundException('User does not exist!');
+        throw new NotFoundException('Driver does not exist!');
       }
 
       delete user.id;
@@ -85,6 +89,39 @@ export class DriverController {
       await this.driverService.saveChanges(user);
 
       res.status(HttpStatus.NO_CONTENT).send();
+    } catch (err) {
+      res
+        .status(err.status)
+        .json({ message: err.response.message || err.message });
+    }
+  }
+
+  @Get('preorder-trips')
+  public async getPreorderTrips(@Res() res) {
+    try {
+      const trips = await this.preorderTripService.findAllNotAcceptedPreorderTrips();
+      res.json(trips);
+    } catch (err) {
+      res
+        .status(err.status)
+        .json({ message: err.response.message || err.message });
+    }
+  }
+
+  @Put('accept-preorder-trip')
+  public async acceptPreorderTrip(
+    @Req() req,
+    @Res() res,
+    @Body() trip: AcceptPreorderTripDto,
+  ) {
+    try {
+      console.log(req.user);
+      await this.preorderTripService.acceptPreorderTrip(
+        trip.preorderTripId,
+        req.user.id,
+      );
+
+      res.json({ message: 'Preorder trip is accepted' });
     } catch (err) {
       res
         .status(err.status)
