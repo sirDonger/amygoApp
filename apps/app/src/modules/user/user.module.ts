@@ -8,10 +8,11 @@ import { FileUploadService } from '../file-upload';
 import { Driver } from '../driver/entities/driver.entity';
 import { Car } from '../driver/entities/car.entity';
 import { Trip } from '../trip/entities/trip.entity';
+import {PreorderTrip} from "../preorder-trip/entities/preorderTrip.entity";
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User, Driver, Car, Trip]),
+    TypeOrmModule.forFeature([User, Driver, Car, Trip, PreorderTrip]),
     JwtModule.register({
       secret: process.env.JWT_ACCESS_SECRET,
     }),

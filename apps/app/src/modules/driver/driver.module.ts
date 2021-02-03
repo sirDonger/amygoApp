@@ -7,14 +7,14 @@ import { Driver } from './entities/driver.entity';
 import { Car } from './entities/car.entity';
 import { Trip } from '../trip/entities/trip.entity';
 import { FileUploadService } from '../file-upload';
-import { PreorderTripService } from '../preorder-trip/preorder-trip.service';
-import { PreorderTrip } from '../preorder-trip/entities/preorder.trip';
+import { PreorderTrip } from '../preorder-trip/entities/preorderTrip.entity';
 import SendNotificationService from "../preorder-trip/sendNotification.service";
+import {PreorderTripService} from "../preorder-trip/preorder-trip.service";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Driver, Car, Trip, PreorderTrip, PreorderTripService, SendNotificationService])],
+  imports: [TypeOrmModule.forFeature([User, Driver, Car, Trip, PreorderTrip]), SendNotificationService],
   controllers: [DriverController],
-  providers: [DriverService, FileUploadService],
+  providers: [DriverService, FileUploadService, PreorderTripService, SendNotificationService],
   exports: [DriverService],
 })
 export class DriverModule {}

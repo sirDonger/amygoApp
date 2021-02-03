@@ -22,8 +22,6 @@ import {
 } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { DriverService } from './driver.service';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { FilesUploadDto } from './dto/filesUpload.dto';
 import { CarDto } from './dto/car.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { FileUploadService } from '../file-upload';

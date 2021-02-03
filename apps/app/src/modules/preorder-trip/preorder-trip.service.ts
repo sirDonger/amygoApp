@@ -6,10 +6,10 @@ import {
 import { PreorderTripDto } from './dto/preorder-trip.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { PreorderTrip } from './entities/preorder.trip';
+import { PreorderTrip } from './entities/preorderTrip.entity';
 import { constant } from '../../constants';
 import { PreorderTripStatus } from './enum/PreorderTripStatus.enum';
-import { Driver } from '../driver/entiities/driver.entity';
+import { Driver } from '../driver/entities/driver.entity';
 import {ConfirmDriverOfferDto} from "./dto/confirmDriverOffer.dto";
 import SendNotificationService from "./sendNotification.service";
 

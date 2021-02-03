@@ -7,7 +7,7 @@ import {
 } from 'typeorm';
 import { User } from '../../user/entities/user.entity';
 import { PreorderTripStatus } from '../enum/PreorderTripStatus.enum';
-import { Driver } from '../../driver/entiities/driver.entity';
+import { Driver } from '../../driver/entities/driver.entity';
 
 @Entity()
 export class PreorderTrip {
