@@ -1,5 +1,6 @@
 import { PrimaryGeneratedColumn, Column, Entity, ManyToOne, JoinColumn } from 'typeorm';
 import { Driver } from '../../driver/entities/driver.entity';
+import { User } from '../../user/entities/user.entity';
 
 @Entity()
 export class Trip {
@@ -19,6 +20,9 @@ export class Trip {
     price: number;
 
     @ManyToOne(() => Driver, trip => Trip)
-    driver: Driver
+    driver: Driver;
+
+    @ManyToOne(() => User, trip => Trip)
+    user: User;
 
 }

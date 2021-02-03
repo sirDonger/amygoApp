@@ -25,4 +25,18 @@ export class TripService{
         tripDto.driver = driver;
         await this.tripRepository.save(tripDto);
     }
+
+    public async findTripById(tripId){
+        const trip = await this.tripRepository.findOne({
+            where: {
+              id: tripId,
+            },
+            loadRelationIds: true
+        });
+        return trip;
+    }
+
+    public async updateTrip(tripData, userData){
+        await this.tripRepository.update(tripData.id, tripData);
+    }
 }

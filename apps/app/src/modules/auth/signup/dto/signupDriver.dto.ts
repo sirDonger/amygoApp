@@ -91,6 +91,15 @@ import {
     })
     emergencyContact: string;
 
+    @IsString()
+    @IsNotEmpty()
+    @ApiProperty({
+      required: true,
+      example: "I'm ...",
+      description: "Short description of yourself"
+    })
+    description: string;
+
     @IsNotEmpty()
     @ApiProperty({
         required: true,

@@ -8,4 +8,5 @@ export enum MessagesEnum {
   NEW_USER_CREATED = 'Congrats, new user created!',
   NEW_DRIVER_CREATED = 'Congrats, new driver created!',
   PROFILE_CHANGED = 'You successfully changed your profile',
+  TRIP_CHANGED = 'You successfully attached user to trip'
 }

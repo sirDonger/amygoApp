@@ -1,6 +1,7 @@
 import { IsString, IsNotEmpty, IsNumber } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Driver } from '../../driver/entities/driver.entity';
+import { User } from '../../user/entities/user.entity';
 
 export class TripDto {
 
@@ -25,6 +26,12 @@ export class TripDto {
         description: 'Driver object. It should not be inserted in JSON'
     })
     driver: Driver;
+
+    @ApiProperty({
+        required: false,
+        description: 'User object. It should not be inserted in JSON'
+    })
+    user: User;
 
     @IsNotEmpty()
     @IsNumber()

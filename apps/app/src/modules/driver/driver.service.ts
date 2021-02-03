@@ -35,7 +35,7 @@ export class DriverService {
     return driver;
   }
 
-  public async findById(userId: string): Promise<User> {
+  public async findById(userId: string): Promise<Driver> {
     const driver = await this.driverRepository.findOne({
       where: {
         id: userId,
@@ -48,7 +48,7 @@ export class DriverService {
     return driver;
   }
 
-  public async findByPhoneNumber(phoneNumber: string): Promise<User> {
+  public async findByPhoneNumber(phoneNumber: string): Promise<Driver> {
     const driver = await this.driverRepository.findOne({
       where: {
         phoneNumber: phoneNumber,
@@ -91,6 +91,19 @@ export class DriverService {
     carDto.driver = driver;
     // console.log(await this.carRepository.save(carDto));
     await this.carRepository.save(carDto)
+  }
+
+  public async findCarByDriver(driverId: string){
+    const driverData = await this.findById(driverId);
+    const carData = await this.carRepository.findOne({
+      where: {
+        driver: driverData
+      },
+      loadRelationIds: true
+    })
+    console.log(carData);
+
+    return carData;
   }
 
   async getDriversWaitingForConfirmation() {

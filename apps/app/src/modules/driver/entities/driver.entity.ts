@@ -37,6 +37,9 @@ export class Driver {
   @Column({ nullable: true })
   emergencyContact: string;
 
+  @Column("text")
+  description: string;
+
   @OneToMany(() => Trip, driver => Driver)
   trips: Trip[]
 
