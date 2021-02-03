@@ -6,10 +6,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '../user/entities/user.entity';
 import { Driver } from '../driver/entiities/driver.entity';
 import { PreorderTrip } from './entities/preorder.trip';
+import SendNotification from './sendNotification.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User, Driver, PreorderTrip])],
   controllers: [PreorderTripController],
-  providers: [PreorderTripService, UserService],
+  providers: [PreorderTripService, UserService, SendNotification],
 })
 export class PreorderTripModule {}

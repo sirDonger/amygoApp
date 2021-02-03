@@ -115,13 +115,32 @@ export class DriverController {
     @Body() trip: AcceptPreorderTripDto,
   ) {
     try {
-      console.log(req.user);
+      console.log(req.user, 'REQ. USER');
       await this.preorderTripService.acceptPreorderTrip(
         trip.preorderTripId,
-        req.user.id,
+        req.user,
       );
 
       res.json({ message: 'Preorder trip is accepted' });
+    } catch (err) {
+      res
+        .status(err.status)
+        .json({ message: err.response.message || err.message });
+    }
+  }
+
+  @Put('reject-preorder-trip')
+  public async rejectPreorderTrip(
+    @Req() req,
+    @Res() res,
+    @Body() trip: AcceptPreorderTripDto,
+  ) {
+    try {
+      await this.preorderTripService.driverRejectPreorderTrip(
+        trip.preorderTripId,
+      );
+
+      res.json({ message: 'Preorder trip is declined' });
     } catch (err) {
       res
         .status(err.status)

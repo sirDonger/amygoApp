@@ -1,5 +1,13 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  CreateDateColumn,
+} from 'typeorm';
 import { User } from '../../user/entities/user.entity';
+import { PreorderTripStatus } from '../enum/PreorderTripStatus.enum';
+import { Driver } from '../../driver/entiities/driver.entity';
 
 @Entity()
 export class PreorderTrip {
@@ -21,12 +29,15 @@ export class PreorderTrip {
   @ManyToOne(() => User, (user) => user.preorderTrips)
   user: string;
 
-  @Column({ nullable: true })
-  driverId: string;
+  @Column()
+  public userId: string;
 
-  @Column({ default: false })
-  isAccepted: boolean;
+  @Column('jsonb', { nullable: true, default: () => "'[]'" })
+  drivers: Driver[];
 
-  @Column({ default: new Date(Date.now()) })
+  @Column({ default: PreorderTripStatus.NO_OFFERING })
+  statusOfPreorderTrip: string;
+
+  @CreateDateColumn()
   orderedAt: string;
 }

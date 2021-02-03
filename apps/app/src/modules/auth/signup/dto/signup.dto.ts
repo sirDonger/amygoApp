@@ -79,7 +79,6 @@ export class SignupDto {
     example: '"1526186s5"',
     description: 'Correct phoneNumber, shorter than 15 characters',
   })
-  //TODO custom validation
   phoneNumber: string;
 
   @IsString()
