@@ -3,15 +3,17 @@ import { ApiProperty } from '@nestjs/swagger';
 import { ValidationMessagesEnum } from '../../../../constants/messagesEnum';
 
 export class SignInDto {
-  @IsEmail()
-  @Matches(/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$/, {
-    message: ValidationMessagesEnum.EMAIL,
-  })
+  // @IsEmail()
+  // @Matches(/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$/, {
+  //   message: ValidationMessagesEnum.EMAIL,
+  // })
+  @IsString()
+  @IsNotEmpty()
   @ApiProperty({
-    example: 'mymail@gmail.com',
-    description: 'Correct email address',
+    example: 'mymail@gmail.com / +380961112233',
+    description: 'Correct email address/phone number',
   })
-  readonly email: string;
+  readonly login: string;
 
   @IsNotEmpty()
   @IsString()

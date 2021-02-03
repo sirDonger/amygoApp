@@ -15,10 +15,10 @@ export class SignInController {
 
   @Post()
   @ApiParam({ name: 'role', enum: ['user', 'driver'] })
-  @ApiBadRequestResponse({ description: 'Email should be valid' })
+  @ApiBadRequestResponse({ description: 'Email/phone number should be valid' })
   @ApiOkResponse({ description: 'Successfully signed in' })
-  @ApiNotFoundResponse({ description: 'This email is not registered yet' })
-  @ApiUnauthorizedResponse({ description: 'Email or password is incorrect!' })
+  @ApiNotFoundResponse({ description: 'This email/phone number is not registered yet' })
+  @ApiUnauthorizedResponse({ description: 'Email/phone number or password is incorrect!' })
   public async signIn(
     @Param('role') role: string,
     @Body() signInUserDto: SignInDto,

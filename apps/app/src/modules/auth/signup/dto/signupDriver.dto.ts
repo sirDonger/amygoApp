@@ -75,7 +75,7 @@ import {
     @IsString()
     @MaxLength(15)
     @ApiProperty({
-      example: '"1526186s5"',
+      example: '+380638901212',
       description: 'Correct phoneNumber, shorter than 15 characters',
     })
     //TODO custom validation

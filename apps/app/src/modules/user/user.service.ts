@@ -39,6 +39,19 @@ export class UserService {
     return user;
   }
 
+  public async findByPhoneNumber(phoneNumber: string): Promise<User> {
+    const user = await this.userRepository.findOne({
+      where: {
+        phoneNumber: phoneNumber,
+      },
+    });
+
+    if (!user) {
+      throw new NotFoundException(`User #${phoneNumber} not found`);
+    }
+    return user;
+  }
+
   public async createUser(userDto: SignupUserDto): Promise<UserDto> {
     const user = await this.userRepository.save(userDto);
     const { password, ...rest } = user;

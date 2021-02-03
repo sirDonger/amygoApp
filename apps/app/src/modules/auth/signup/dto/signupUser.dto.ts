@@ -75,7 +75,7 @@ export class SignupUserDto {
   @IsString()
   @MaxLength(15)
   @ApiProperty({
-    example: '"1526186s5"',
+    example: '+380632412233',
     description: 'Correct phoneNumber, shorter than 15 characters',
   })
   //TODO custom validation
@@ -86,7 +86,7 @@ export class SignupUserDto {
   @MaxLength(15)
   @ApiProperty({
     required: false,
-    example: '"1526186s5"',
+    example: '+380632412233',
     description: 'Correct phoneNumber, shorter than 15 characters',
   })
   emergencyContact: string;

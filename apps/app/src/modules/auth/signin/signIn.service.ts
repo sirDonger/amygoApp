@@ -7,6 +7,7 @@ import { JwtPayloadInterface } from './interfaces/jwt.payload.interface';
 import { MessagesEnum } from '../../../constants/messagesEnum';
 import { ResponseDto } from '../dtoResponse/response.dto';
 import { DriverService } from '../../driver/driver.service';
+import { sign } from 'jsonwebtoken';
 
 @Injectable()
 export class SignInService {
@@ -21,14 +22,29 @@ export class SignInService {
     role: string,
   ): Promise<ResponseDto> {
     let userData;
+    const emailValidator = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$/;
+    
     if (role === 'user') {
-      userData = await this.userService.findByEmail(
-        signInUserDto.email.toLowerCase(),
-      );
-    } else {
-      userData = await this.driverService.findByEmail(
-        signInUserDto.email.toLowerCase(),
-      );
+      if(emailValidator.test(signInUserDto.login)){
+        userData = await this.userService.findByEmail(
+          signInUserDto.login.toLowerCase(),
+        );
+      } else {
+        userData = await this.userService.findByPhoneNumber(
+          signInUserDto.login
+        );
+      }
+    } 
+    else {
+      if(emailValidator.test(signInUserDto.login)){
+        userData = await this.driverService.findByEmail(
+          signInUserDto.login.toLowerCase(),
+        );
+      } else {
+        userData = await this.driverService.findByPhoneNumber(
+          signInUserDto.login
+        );
+      }
     }
 
     if (!userData) {

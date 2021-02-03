@@ -30,7 +30,7 @@ export class DriverService {
 
     if (!driver) {
       if (!driver)
-        throw new NotFoundException(`Driver ${email} not registered`);
+        throw new NotFoundException(`Driver ${email} not found`);
     }
     return driver;
   }
@@ -44,6 +44,19 @@ export class DriverService {
 
     if (!driver) {
       throw new NotFoundException(`Driver #${userId} not found`);
+    }
+    return driver;
+  }
+
+  public async findByPhoneNumber(phoneNumber: string): Promise<User> {
+    const driver = await this.driverRepository.findOne({
+      where: {
+        phoneNumber: phoneNumber,
+      },
+    });
+
+    if (!driver) {
+      throw new NotFoundException(`Driver #${phoneNumber} not found`);
     }
     return driver;
   }
