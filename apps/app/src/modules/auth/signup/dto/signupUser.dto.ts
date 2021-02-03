@@ -33,6 +33,7 @@ export class SignupUserDto {
     type: 'file',
     required: false,
   })
+  @IsOptional()
   profileImage: string;
 
   @IsEmail()
@@ -78,7 +79,6 @@ export class SignupUserDto {
     example: '+380632412233',
     description: 'Correct phoneNumber, shorter than 15 characters',
   })
-  //TODO custom validation
   phoneNumber: string;
 
   @IsString()

@@ -4,10 +4,12 @@ import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as rateLimit from 'express-rate-limit';
 import { constant } from './constants/';
+import * as helmet from 'helmet';
 
 (async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix('api');
+  // app.use(helmet());
   //TODO specify port
   app.enableCors();
   app.useGlobalPipes(

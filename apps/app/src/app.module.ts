@@ -10,18 +10,22 @@ import { typeOrmConfig } from './config/dbconfig';
 import { DriverModule } from './modules/driver/driver.module';
 import { TripModule } from './modules/trip/trip.module';
 import { AdminModule } from './modules/admin/admin.module';
+import { PreorderTripModule } from './modules/preorder-trip/preorder-trip.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     ChangeProfileModule,
+    ScheduleModule.forRoot(),
     UserModule,
     AuthModule,
     TypeOrmModule.forRoot(typeOrmConfig),
     LocationModule,
     DriverModule,
     TripModule,
-    AdminModule
+    AdminModule,
+    PreorderTripModule,
   ],
   controllers: [],
   providers: [AppGateway],

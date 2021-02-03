@@ -21,7 +21,7 @@ export class DriverService {
     private driverRepository: Repository<Driver>,
   ) {}
 
-  public async findByEmail(email: string): Promise<User> {
+  public async findByEmail(email: string): Promise<Driver> {
     const driver = await this.driverRepository.findOne({
       where: {
         email,
@@ -72,7 +72,7 @@ export class DriverService {
     await this.driverRepository.update(driver, userData);
   }
 
-  public async addDocuments(driver) {
+  public async saveChanges(driver) {
     await this.driverRepository.save(driver);
   }
 

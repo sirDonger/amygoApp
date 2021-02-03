@@ -5,6 +5,7 @@ import {
   HttpStatus,
   NotFoundException,
   Post,
+  Put,
   Req,
   Res,
   UploadedFiles,
@@ -27,12 +28,16 @@ import { CarDto } from './dto/car.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { FileUploadService } from '../file-upload';
 import { DocumentsStatus } from './documentStatus.enum';
+import { AddDocumentsDto } from './dto/addDocuments.dto';
+import { PreorderTripService } from '../preorder-trip/preorder-trip.service';
+import { AcceptPreorderTripDto } from '../preorder-trip/dto/acceptPreorderTrip.dto';
 
 @UseGuards(AuthGuard('jwt'))
 @Controller('driver')
 export class DriverController {
   constructor(
     private readonly driverService: DriverService,
+    private readonly preorderTripService: PreorderTripService,
     private readonly uploadService: FileUploadService,
   ) {}
   @Get('/profile')
@@ -40,19 +45,25 @@ export class DriverController {
   @ApiOkResponse({ description: 'Successfully signed in' })
   @ApiUnauthorizedResponse({ description: 'Provide valid access token' })
   public async getUser(@Req() req, @Res() res): Promise<void> {
-    const user = await this.driverService.findById(req.user.id);
+    try {
+      const user = await this.driverService.findById(req.user.id);
 
-    if (!user) {
-      throw new NotFoundException('User does not exist!');
+      if (!user) {
+        throw new NotFoundException('Driver does not exist!');
+      }
+
+      delete user.id;
+      delete user.password;
+
+      return res.status(HttpStatus.OK).json(user);
+    } catch (err) {
+      res
+        .status(err.status)
+        .json({ message: err.response.message || err.message });
     }
-
-    delete user.id;
-    delete user.password;
-
-    return res.status(HttpStatus.OK).json(user);
   }
 
-  @Post('add/documents')
+  @Post('documents')
   @ApiBearerAuth()
   @UseInterceptors(FilesInterceptor('documents'))
   @ApiConsumes('multipart/form-data')
@@ -64,22 +75,81 @@ export class DriverController {
     @Req() req,
     @Res() res,
     @UploadedFiles() documents,
+    @Body() docs: AddDocumentsDto,
+  ): Promise<void> {
+    try {
+      const { user } = req;
+
+      documents.forEach((doc) => this.uploadService.isFileValid(doc));
+
+      documents.forEach((doc) => {
+        doc.originalname += Date.now();
+        user.documents.push(process.env.S3_BUCKET_URL + doc.originalname);
+        this.uploadService.upload(doc);
+      });
+
+      user.documentsStatus = DocumentsStatus.WAITING_FOR_CONFIRMATION;
+
+      await this.driverService.saveChanges(user);
+
+      res.status(HttpStatus.NO_CONTENT).send();
+    } catch (err) {
+      res
+        .status(err.status)
+        .json({ message: err.response.message || err.message });
+    }
+  }
+
+  @Get('preorder-trips')
+  public async getPreorderTrips(@Res() res) {
+    try {
+      const trips = await this.preorderTripService.findAllNotAcceptedPreorderTrips();
+      res.json(trips);
+    } catch (err) {
+      res
+        .status(err.status)
+        .json({ message: err.response.message || err.message });
+    }
+  }
+
+  @Put('accept-preorder-trip')
+  public async acceptPreorderTrip(
+    @Req() req,
+    @Res() res,
+    @Body() trip: AcceptPreorderTripDto,
   ) {
-    const { user } = req;
+    try {
+      console.log(req.user, 'REQ. USER');
+      await this.preorderTripService.acceptPreorderTrip(
+        trip.preorderTripId,
+        req.user,
+      );
 
-    documents.forEach((doc) => this.uploadService.isFileValid(doc));
+      res.json({ message: 'Preorder trip is accepted' });
+    } catch (err) {
+      res
+        .status(err.status)
+        .json({ message: err.response.message || err.message });
+    }
+  }
 
-    documents.forEach((doc) => {
-      doc.originalname += Date.now();
-      user.documents.push(process.env.S3_BUCKET_URL + doc.originalname);
-      this.uploadService.upload(doc);
-    });
+  @Put('reject-preorder-trip')
+  public async rejectPreorderTrip(
+    @Req() req,
+    @Res() res,
+    @Body() trip: AcceptPreorderTripDto,
+  ) {
+    try {
+      await this.preorderTripService.driverRejectPreorderTrip(
+        trip.preorderTripId,
+      );
 
-    user.documentsStatus = DocumentsStatus.WAITING_FOR_CONFIRMATION;
-
-    await this.driverService.addDocuments(user);
-
-    res.status(HttpStatus.NO_CONTENT);
+      res.json({ message: 'Preorder trip is declined' });
+    } catch (err) {
+      res
+        .status(err.status)
+        .json({ message: err.response.message || err.message });
+    }
   }
 
   @Post('add/car')
