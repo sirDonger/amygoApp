@@ -40,6 +40,7 @@ export class FileUploadService {
   }
 
   isFileValid(file) {
+    console.log(file)
     if (file.size > constant.MAX_FILE_SIZE) {
       throw new PayloadTooLargeException();
     }

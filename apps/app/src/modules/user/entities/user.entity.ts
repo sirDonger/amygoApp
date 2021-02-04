@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import {Entity, PrimaryGeneratedColumn, Column, OneToMany} from 'typeorm';
 import { constant } from '../../../constants';
+import { PreorderTrip } from '../../preorder-trip/entities/preorderTrip.entity';
 
 @Entity()
 export class User {
@@ -34,5 +35,7 @@ export class User {
 
   @Column({ nullable: true })
   emergencyContact: string;
-  
+
+  @OneToMany(() => PreorderTrip, (preorderTrip) => preorderTrip.user)
+  preorderTrips: PreorderTrip[];
 }
