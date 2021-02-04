@@ -86,7 +86,7 @@ import {
     @MaxLength(15)
     @ApiProperty({
       required: false,
-      example: '"1526186s5"',
+      example: '+380638901212',
       description: 'Correct phoneNumber, shorter than 15 characters',
     })
     emergencyContact: string;

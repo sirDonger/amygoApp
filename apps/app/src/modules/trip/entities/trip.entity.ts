@@ -19,6 +19,9 @@ export class Trip {
     @Column()
     price: number;
 
+    @Column("timestamp")
+    date: Date;
+
     @ManyToOne(() => Driver, trip => Trip)
     driver: Driver;
 

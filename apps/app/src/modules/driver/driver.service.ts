@@ -101,7 +101,6 @@ export class DriverService {
       },
       loadRelationIds: true
     })
-    console.log(carData);
 
     return carData;
   }

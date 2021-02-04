@@ -24,6 +24,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { TripService } from './trip.service';
 import { DriverService } from '../driver/driver.service';
 import { TripDto } from './dto/trip.dto';
+import { RateDto } from './dto/rate.dto';
 import { UserService } from '../user/user.service';
 import { MessagesEnum } from '../../constants/messagesEnum/messages.enum';
 
@@ -36,7 +37,7 @@ export class TripController {
         private readonly userService: UserService,
     ){}
 
-    @Post('create')
+    @Post('user/create')
     @ApiBearerAuth()
     async createTrip(
         @Body() tripDto: TripDto,
@@ -56,7 +57,7 @@ export class TripController {
         }
     }
 
-    @Put('set-user/:tripId')
+    @Put('set-driver/:tripId')
     @ApiBearerAuth()
     @ApiParam({name: 'tripId'})
     async setUser(
@@ -66,10 +67,10 @@ export class TripController {
     ){
         try{
             const tripData = await this.tripService.findTripById(params.tripId);
-            const userData = await this.userService.findById(req.user.id);
+            const driverData = await this.driverService.findById(req.user.id);
             
-            tripData.user = userData;
-            await this.tripService.updateTrip(tripData, userData);
+            tripData.driver = driverData;
+            await this.tripService.updateTrip(tripData);
             return res.status(HttpStatus.OK).json({
                 message: MessagesEnum.TRIP_CHANGED
             })
@@ -106,5 +107,26 @@ export class TripController {
             'carType': carData.carType,
             'carNumber': carData.carNumber
         });
+    }
+
+    @Post('user-rate/create')
+    @ApiBearerAuth()
+    async createRate(
+        @Body() rateDto: RateDto,
+        @Res() res,
+        @Req() req
+    ){
+        try{
+            const userData = this.userService.findById(req.user.id);
+            await this.tripService.createRate(rateDto, userData);
+            return res.status(HttpStatus.OK).json({
+                message: 'Rate successfully created',
+                status: 201
+            })
+        } catch(err){
+            return res.status(HttpStatus.CONFLICT).json({
+                message: err.detail || err.message
+            })
+        }
     }
 }

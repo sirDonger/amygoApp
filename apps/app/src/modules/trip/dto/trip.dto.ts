@@ -23,13 +23,13 @@ export class TripDto {
 
     @ApiProperty({
         required: false,
-        description: 'Driver object. It should not be inserted in JSON'
+        description: 'Driver object'
     })
     driver: Driver;
 
     @ApiProperty({
         required: false,
-        description: 'User object. It should not be inserted in JSON'
+        description: 'User object'
     })
     user: User;
 
@@ -48,4 +48,11 @@ export class TripDto {
         description: "Price of the trip"
     })
     readonly price: number;
+
+    @ApiProperty({
+        required: false,
+        example: "26-07-2021",
+        description: "Date, when the trip turned out"
+    })
+    date: Date;
 }
