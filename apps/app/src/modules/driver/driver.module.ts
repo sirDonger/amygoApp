@@ -8,13 +8,22 @@ import { Car } from './entities/car.entity';
 import { Trip } from '../trip/entities/trip.entity';
 import { FileUploadService } from '../file-upload';
 import { PreorderTrip } from '../preorder-trip/entities/preorderTrip.entity';
-import SendNotificationService from "../preorder-trip/sendNotification.service";
-import {PreorderTripService} from "../preorder-trip/preorder-trip.service";
+import SendNotificationService from '../preorder-trip/sendNotification.service';
+import { PreorderTripService } from '../preorder-trip/preorder-trip.service';
+import { SchedulerRegistry } from '@nestjs/schedule';
+import { AppGateway } from '../../app.gateway';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Driver, Car, Trip, PreorderTrip]), SendNotificationService],
+  imports: [TypeOrmModule.forFeature([User, Driver, Car, Trip, PreorderTrip])],
   controllers: [DriverController],
-  providers: [DriverService, FileUploadService, PreorderTripService, SendNotificationService],
+  providers: [
+    DriverService,
+    FileUploadService,
+    PreorderTripService,
+    SendNotificationService,
+    SchedulerRegistry,
+    AppGateway,
+  ],
   exports: [DriverService],
 })
 export class DriverModule {}

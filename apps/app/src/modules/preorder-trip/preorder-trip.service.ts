@@ -10,15 +10,15 @@ import { PreorderTrip } from './entities/preorderTrip.entity';
 import { constant } from '../../constants';
 import { PreorderTripStatus } from './enum/PreorderTripStatus.enum';
 import { Driver } from '../driver/entities/driver.entity';
-import {ConfirmDriverOfferDto} from "./dto/confirmDriverOffer.dto";
-import SendNotificationService from "./sendNotification.service";
+import { ConfirmDriverOfferDto } from './dto/confirmDriverOffer.dto';
+import SendNotificationService from './sendNotification.service';
 
 @Injectable()
 export class PreorderTripService {
   constructor(
     @InjectRepository(PreorderTrip)
     private preorderTripRepository: Repository<PreorderTrip>,
-    private readonly sendNotificationService: SendNotificationService
+    private readonly sendNotificationService: SendNotificationService,
   ) {}
 
   async preorder(preorderTripDto: PreorderTripDto) {
@@ -28,11 +28,18 @@ export class PreorderTripService {
   async findAllNotAcceptedPreorderTrips(): Promise<PreorderTrip[]> {
     //TODO limit, order by location....
     const preorderTrips = await this.preorderTripRepository.find({
-      select: ["preorderTripId", "when", "where", "from", "userId", "numberOfPeople"],
+      select: [
+        'preorderTripId',
+        'when',
+        'where',
+        'from',
+        'userId',
+        'numberOfPeople',
+      ],
       where: [
-        {statusOfPreorderTrip: PreorderTripStatus.WAITING_FOR_CONFIRMATION},
-        {statusOfPreorderTrip: PreorderTripStatus.NO_OFFERING}
-        ]
+        { statusOfPreorderTrip: PreorderTripStatus.WAITING_FOR_CONFIRMATION },
+        { statusOfPreorderTrip: PreorderTripStatus.NO_OFFERING },
+      ],
     });
 
     return preorderTrips;
@@ -47,31 +54,43 @@ export class PreorderTripService {
         preorderTripId,
       },
     });
+
+    if (!preorderTrip) {
+      throw new NotFoundException();
+    }
     //TODO send user notification to preorderTrip.userId
 
-    console.log(preorderTrip, 'PREORDER TRIP');
     preorderTrip.statusOfPreorderTrip =
       PreorderTripStatus.WAITING_FOR_CONFIRMATION;
     preorderTrip.drivers.push(driver);
     await this.preorderTripRepository.save(preorderTrip);
   }
 
-  async driverRejectPreorderTrip(preorderTripId: string): Promise<void> {
+  async driverCancelPreorderTrip(
+    preorderTripId: string,
+    driverId: string,
+  ): Promise<void> {
     const preorderTrip = await this.preorderTripRepository.findOne({
       where: {
         preorderTripId,
       },
     });
 
+    if (!preorderTrip) {
+      throw new NotFoundException();
+    }
+
     if (
       preorderTrip.when.getTime() - new Date(Date.now()).getTime() >=
       constant.MIN_DATE_OF_PREORDER
     ) {
-      console.log(preorderTrip.when.getTime());
-      console.log(new Date(Date.now()).getTime());
-      preorderTrip.statusOfPreorderTrip = PreorderTripStatus.NO_OFFERING;
-      //TODO filter array
-      preorderTrip.drivers = null;
+      preorderTrip.drivers = preorderTrip.drivers.filter(
+        (driver) => driver.id !== driverId,
+      );
+
+      if (!preorderTrip.drivers.length) {
+        preorderTrip.statusOfPreorderTrip = PreorderTripStatus.NO_OFFERING;
+      }
 
       await this.preorderTripRepository.save(preorderTrip);
       return;
@@ -79,43 +98,57 @@ export class PreorderTripService {
     //TODO which exception??
     throw new NotAcceptableException(
       null,
-      "You can't deny trip sooner than one hour before the trip start",
+      "You can't deny trip sooner than one hour before the trip should start",
     );
   }
 
   async getAllOffers(userId: string) {
+    console.log(userId, 'userId');
     const allOffers = await this.preorderTripRepository.findOne({
       where: {
         userId,
         statusOfPreorderTrip: PreorderTripStatus.WAITING_FOR_CONFIRMATION,
       },
     });
-
-    if (!allOffers.drivers.length) {
-      throw new NotFoundException(null, 'There is no offers from drivers');
+    if (!allOffers || allOffers.drivers.length) {
+      throw new NotFoundException();
     }
 
-
-    return {preorderTripId: allOffers.preorderTripId, drivers: allOffers.drivers.map(driver => {
-      const {documentsStatus, documents, emergencyContact, password,  profileImage, ...rest} = driver
-      return rest})
+    return {
+      preorderTripId: allOffers.preorderTripId,
+      drivers: allOffers.drivers.map((driver) => {
+        const {
+          documentsStatus,
+          documents,
+          emergencyContact,
+          password,
+          profileImage,
+          ...rest
+        } = driver;
+        return rest;
+      }),
     };
   }
 
   async confirmDriver(confirmDriverOfferDto: ConfirmDriverOfferDto) {
-    const {preorderTripId, driverId} = confirmDriverOfferDto;
+    const { preorderTripId, driverId } = confirmDriverOfferDto;
     const preorderTrip = await this.preorderTripRepository.findOne({
       where: {
-        preorderTripId
-      }
+        preorderTripId,
+      },
     });
 
-    preorderTrip.drivers = preorderTrip.drivers.filter(driver => driver.id === driverId);
+    preorderTrip.drivers = preorderTrip.drivers.filter(
+      (driver) => driver.id === driverId,
+    );
     preorderTrip.statusOfPreorderTrip = PreorderTripStatus.ACCEPTED;
 
-    this.sendNotificationService.addCronJob(preorderTripId, preorderTrip.when)
+    this.sendNotificationService.notifyUserOfDriverComing(
+      preorderTripId,
+      preorderTrip.when,
+      preorderTrip.drivers[0],
+    );
 
     await this.preorderTripRepository.save(preorderTrip);
-
   }
 }

@@ -6,7 +6,6 @@ import {
   HttpStatus,
   UseInterceptors,
   UploadedFile,
-  Param,
 } from '@nestjs/common';
 import { SignUpService } from './signUp.service';
 import { SignupUserDto } from './dto/signupUser.dto';
@@ -19,7 +18,6 @@ import {
   ApiConflictResponse,
   ApiConsumes,
   ApiCreatedResponse,
-  ApiParam,
 } from '@nestjs/swagger';
 
 @Controller('/auth/signUp')
@@ -60,7 +58,7 @@ export class SignupController {
       }
 
       res.status(HttpStatus.CREATED).json({
-        message:MessagesEnum.NEW_USER_CREATED
+        message: MessagesEnum.NEW_USER_CREATED,
       });
     } catch (err) {
       res
@@ -100,7 +98,7 @@ export class SignupController {
       }
 
       res.status(HttpStatus.CREATED).json({
-        message: MessagesEnum.NEW_DRIVER_CREATED
+        message: MessagesEnum.NEW_DRIVER_CREATED,
       });
     } catch (err) {
       res

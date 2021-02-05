@@ -6,12 +6,23 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '../user/entities/user.entity';
 import { Driver } from '../driver/entities/driver.entity';
 import { PreorderTrip } from './entities/preorderTrip.entity';
-import SendNotification from './sendNotification.service';
-import {Car} from "../driver/entities/car.entity";
+import { Car } from '../driver/entities/car.entity';
+import { DriverService } from '../driver/driver.service';
+import { SchedulerRegistry } from '@nestjs/schedule';
+import SendNotificationService from './sendNotification.service';
+import { AppGateway } from '../../app.gateway';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Driver,Car, PreorderTrip])],
+  imports: [TypeOrmModule.forFeature([User, Driver, Car, PreorderTrip])],
   controllers: [PreorderTripController],
-  providers: [PreorderTripService, UserService, SendNotification],
+  providers: [
+    PreorderTripService,
+    UserService,
+    SendNotificationService,
+    DriverService,
+    SchedulerRegistry,
+    AppGateway,
+  ],
+  exports: [SendNotificationService],
 })
 export class PreorderTripModule {}

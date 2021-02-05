@@ -1,4 +1,6 @@
 import {
+  ConnectedSocket,
+  MessageBody,
   OnGatewayInit,
   SubscribeMessage,
   WebSocketGateway,
@@ -33,11 +35,24 @@ export class AppGateway implements OnGatewayInit {
   }
 
   @SubscribeMessage('lastknownLocation')
-  async handleLocation(client: Socket, data: object): Promise<object> {
+  async handleLocation(client: Socket, data: any): Promise<any> {
     const response = await this.client
       .send('lastLocation', JSON.stringify(data))
       .toPromise();
     this.server.emit('lastknownLocation', response);
     return response;
+  }
+
+  @SubscribeMessage('searchArea')
+  notifyDrivers(@MessageBody() data: any, @ConnectedSocket() client?: Socket) {
+    this.server.emit('searchArea', data);
+  }
+
+  @SubscribeMessage('notifyUserOfDriverComing')
+  notifyUserOfDriverComing(
+    @MessageBody() data: any,
+    @ConnectedSocket() client?: Socket,
+  ) {
+    this.server.emit('notifyUserOfDriverComing', data);
   }
 }

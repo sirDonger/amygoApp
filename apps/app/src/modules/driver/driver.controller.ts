@@ -18,7 +18,10 @@ import {
   ApiNoContentResponse,
   ApiOkResponse,
   ApiUnauthorizedResponse,
-  ApiConflictResponse
+  ApiConflictResponse,
+  ApiTags,
+  ApiNotFoundResponse,
+  ApiOperation,
 } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { DriverService } from './driver.service';
@@ -31,6 +34,7 @@ import { PreorderTripService } from '../preorder-trip/preorder-trip.service';
 import { AcceptPreorderTripDto } from '../preorder-trip/dto/acceptPreorderTrip.dto';
 
 @UseGuards(AuthGuard('jwt'))
+@ApiBearerAuth()
 @Controller('driver')
 export class DriverController {
   constructor(
@@ -62,13 +66,13 @@ export class DriverController {
   }
 
   @Post('documents')
-  @ApiBearerAuth()
   @UseInterceptors(FilesInterceptor('documents'))
   @ApiConsumes('multipart/form-data')
   @ApiUnauthorizedResponse({ description: 'Provide valid access token' })
   @ApiNoContentResponse({
     description: 'Congrats, you added documents',
   })
+  @ApiOperation({ summary: 'Driver adds documents and wait for confirmation' })
   public async addDocuments(
     @Req() req,
     @Res() res,
@@ -99,6 +103,9 @@ export class DriverController {
   }
 
   @Get('preorder-trips')
+  @ApiOperation({ summary: 'Driver gets all preorder trips...' })
+  @ApiOkResponse({ description: 'List of all preorder trips' })
+  @ApiTags('preorder')
   public async getPreorderTrips(@Res() res) {
     try {
       const trips = await this.preorderTripService.findAllNotAcceptedPreorderTrips();
@@ -111,13 +118,15 @@ export class DriverController {
   }
 
   @Put('accept-preorder-trip')
+  @ApiTags('preorder')
+  @ApiOperation({ summary: 'Driver offers user his service' })
+  @ApiNotFoundResponse({ description: 'Trip is not found' })
   public async acceptPreorderTrip(
     @Req() req,
     @Res() res,
     @Body() trip: AcceptPreorderTripDto,
   ) {
     try {
-      console.log(req.user, 'REQ. USER');
       await this.preorderTripService.acceptPreorderTrip(
         trip.preorderTripId,
         req.user,
@@ -125,21 +134,27 @@ export class DriverController {
 
       res.json({ message: 'Preorder trip is accepted' });
     } catch (err) {
+      console.log(err);
       res
         .status(err.status)
         .json({ message: err.response.message || err.message });
     }
   }
 
-  @Put('reject-preorder-trip')
-  public async rejectPreorderTrip(
+  @Put('cancel-preorder-trip')
+  @ApiTags('preorder')
+  @ApiOperation({ summary: 'Driver reject his offer or cancel agreement' })
+  @ApiOkResponse({ description: 'Preorder trip is decline' })
+  @ApiNotFoundResponse({ description: 'Trip is not found' })
+  public async cancelPreorderTrip(
     @Req() req,
     @Res() res,
     @Body() trip: AcceptPreorderTripDto,
   ) {
     try {
-      await this.preorderTripService.driverRejectPreorderTrip(
+      await this.preorderTripService.driverCancelPreorderTrip(
         trip.preorderTripId,
+        req.user.id,
       );
 
       res.json({ message: 'Preorder trip is declined' });
@@ -155,19 +170,14 @@ export class DriverController {
   @ApiConflictResponse({
     description: 'Car number already exists!',
   })
-  public async createCar(
-    @Body() carDto: CarDto,
-    @Res() res,
-    @Req() req
-
-  ){
-    try{
+  public async createCar(@Body() carDto: CarDto, @Res() res, @Req() req) {
+    try {
       await this.driverService.createCar(carDto, req.user.id);
       return res.status(HttpStatus.CREATED).json({
         message: 'Car was successfully created',
-        status: 201
-      }) 
-    } catch(err){
+        status: 201,
+      });
+    } catch (err) {
       res
         .status(HttpStatus.CONFLICT)
         .json({ message: err.detail || err.message });

@@ -1,8 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from '../user/entities/user.entity';
-import { In, Repository } from 'typeorm';
-import { SignupUserDto } from '../auth/signup/dto/signupUser.dto';
+import { Repository } from 'typeorm';
 import { SignupDriverDto } from '../auth/signup/dto/signupDriver.dto';
 import { UserDto } from '../user/dto/user.dto';
 import { CarDto } from './dto/car.dto';
@@ -29,8 +27,7 @@ export class DriverService {
     });
 
     if (!driver) {
-      if (!driver)
-        throw new NotFoundException(`Driver ${email} not found`);
+      if (!driver) throw new NotFoundException(`Driver ${email} not found`);
     }
     return driver;
   }
@@ -61,6 +58,11 @@ export class DriverService {
     return driver;
   }
 
+  public async findAllDrivers() {
+    const driver = await this.driverRepository.find();
+    return driver;
+  }
+
   public async createDriver(userDto: SignupDriverDto): Promise<UserDto> {
     const user = await this.driverRepository.save(userDto);
     const { password, ...rest } = user;
@@ -82,7 +84,7 @@ export class DriverService {
     });
   }
 
-  public async createCar(carDto: CarDto, userId){
+  public async createCar(carDto: CarDto, userId) {
     const driver = await this.driverRepository.findOne({
       where: {
         id: userId,
@@ -90,17 +92,17 @@ export class DriverService {
     });
     carDto.driver = driver;
     // console.log(await this.carRepository.save(carDto));
-    await this.carRepository.save(carDto)
+    await this.carRepository.save(carDto);
   }
 
-  public async findCarByDriver(driverId: string){
+  public async findCarByDriver(driverId: string) {
     const driverData = await this.findById(driverId);
     const carData = await this.carRepository.findOne({
       where: {
-        driver: driverData
+        driver: driverData,
       },
-      loadRelationIds: true
-    })
+      loadRelationIds: true,
+    });
 
     return carData;
   }
