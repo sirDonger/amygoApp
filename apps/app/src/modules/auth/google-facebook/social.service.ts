@@ -6,6 +6,7 @@ export class SocialService{
         if(!req.user){
             return 'No user from google'
         }
+        console.log(req.user);
         return {
             message: 'User google info',
             user: req.user
