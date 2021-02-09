@@ -15,13 +15,24 @@ export default class SendNotificationService {
     private readonly driverService: DriverService,
   ) {}
 
-  notifyUserOfDriverComing(name: string, time: Date, driver: Driver) {
+  notifyUserOfDriverComing(
+    name: string,
+    time: Date,
+    driver: Driver,
+    userId: string,
+  ) {
     const when = new Date(
       new Date(time).getTime() - constant.NOTIFY_USER_THAT_DRIVER_COMING,
     );
+    name += Date.now();
+
+    console.log('notify user');
+    console.log(new Date(), 'now');
+    console.log(when, 'when');
+    console.log('notify user');
 
     const job = new CronJob(when, () => {
-      this.appGateway.notifyUserOfDriverComing(driver);
+      this.appGateway.notifyUserOfDriverComing(driver, null, userId);
       this.schedulerRegistry.deleteCronJob(name);
     });
 
@@ -29,26 +40,40 @@ export default class SendNotificationService {
     job.start();
   }
 
-  notifyAllDrivers(preorderTripDto: PreorderTripDto, name: string, time: Date) {
+  notifyNearDrivers(
+    preorderTripDto: PreorderTripDto,
+    name: string,
+    time: Date,
+  ) {
     name += Date.now();
     const { when, from, where, numberOfPeople } = preorderTripDto;
 
+    console.log('notify driver');
+    console.log(new Date(), 'now');
+    console.log(when, 'when');
+    console.log('notify driver');
+
     const whenNotify = new Date(
-      new Date(time).getTime() +
-        constant.UTC -
-        constant.NOTIFY_DRIVERS_OF_PREORDER,
+      new Date(time).getTime() - constant.NOTIFY_DRIVERS_OF_PREORDER,
     );
+
     const job = new CronJob(whenNotify, async () => {
       //TODO find closest drivers
-      const drivers = await this.driverService.findAllDrivers();
+      const driversIds = await this.driverService.findVerifiedOnlineDrivers();
 
-      this.appGateway.notifyDrivers({
-        message: 'There is new order near you',
-        when,
-        from,
-        where,
-        numberOfPeople,
-      });
+      driversIds.forEach((driverId) =>
+        this.appGateway.notifyDrivers(
+          {
+            message: 'There is new order near you',
+            when,
+            from,
+            where,
+            numberOfPeople,
+          },
+          null,
+          driverId,
+        ),
+      );
 
       this.schedulerRegistry.deleteCronJob(name);
     });

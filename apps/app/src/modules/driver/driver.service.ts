@@ -58,9 +58,21 @@ export class DriverService {
     return driver;
   }
 
-  public async findAllDrivers() {
-    const driver = await this.driverRepository.find();
-    return driver;
+  public async findVerifiedOnlineDrivers(): Promise<string[]> {
+    //TODO limit by location
+    const driversIds = await this.driverRepository.find({
+      select: ['id'],
+      where: {
+        isOnline: true,
+        isVerified: true,
+      },
+    });
+
+    if (!driversIds.length) {
+      throw new NotFoundException({ message: 'No driver offered you trip' });
+    }
+
+    return driversIds.map((driver) => driver.id);
   }
 
   public async createDriver(userDto: SignupDriverDto): Promise<UserDto> {
@@ -91,7 +103,6 @@ export class DriverService {
       },
     });
     carDto.driver = driver;
-    // console.log(await this.carRepository.save(carDto));
     await this.carRepository.save(carDto);
   }
 
@@ -103,6 +114,7 @@ export class DriverService {
       },
       loadRelationIds: true,
     });
+    console.log(carData);
 
     return carData;
   }

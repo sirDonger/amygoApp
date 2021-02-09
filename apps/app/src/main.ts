@@ -30,6 +30,14 @@ import * as helmet from 'helmet';
     .setTitle('API endpoints description')
     .setDescription('API endpoints description')
     .setVersion('1.0')
+    .addTag(
+      'preorder',
+      `In order to get notification from server, User and Driver should listen socket on its own Id. 
+        Guess => Driver after login, user after confirming driver offer.
+         Example: this.sockets.on(driverId, data => {
+              console.log('driverId', data); 
+            })`,
+    )
     .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);

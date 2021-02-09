@@ -19,6 +19,6 @@ export const constant = {
 
   UTC: 2 * 60 * 60 * 1000,
 
-  NOTIFY_DRIVERS_OF_PREORDER: 2 * 60 * 60 * 1000, //  2 hours before the trip!!!
-  NOTIFY_USER_THAT_DRIVER_COMING: 30 * 60 * 1000, //  half hour before the trip
+  NOTIFY_DRIVERS_OF_PREORDER: 61 * 60 * 1000, //  1 and 1min hours before the trip!!! for Testing UI Validator allow 1 hour
+  NOTIFY_USER_THAT_DRIVER_COMING: 60.5 * 60 * 1000, //  hour and half min before the trip
 };

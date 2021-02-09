@@ -43,16 +43,21 @@ export class AppGateway implements OnGatewayInit {
     return response;
   }
 
-  @SubscribeMessage('searchArea')
-  notifyDrivers(@MessageBody() data: any, @ConnectedSocket() client?: Socket) {
-    this.server.emit('searchArea', data);
+  @SubscribeMessage('notifyDrivers')
+  notifyDrivers(
+    @MessageBody() data: any,
+    @ConnectedSocket() client: Socket,
+    driverId: string,
+  ) {
+    this.server.emit(driverId, data);
   }
 
   @SubscribeMessage('notifyUserOfDriverComing')
   notifyUserOfDriverComing(
     @MessageBody() data: any,
-    @ConnectedSocket() client?: Socket,
+    @ConnectedSocket() client: Socket,
+    userId: string,
   ) {
-    this.server.emit('notifyUserOfDriverComing', data);
+    this.server.emit(`${userId}`, { message: 'Your driver is coming' });
   }
 }

@@ -11,7 +11,6 @@
         socket.on(data).on('roomIdEvent', function (data) {
             console.log(data, 'data');
         })
-
     });
     socket.on('exception', function(data) {
         console.log('event', data);

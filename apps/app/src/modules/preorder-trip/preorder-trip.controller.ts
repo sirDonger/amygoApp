@@ -41,7 +41,9 @@ export class PreorderTripController {
   @ApiBadRequestResponse({
     description: 'Property when should be in near future ',
   })
-  @ApiOperation({ summary: 'User orders trip' })
+  @ApiOperation({
+    summary: 'User orders trip',
+  })
   async preorderTrip(
     @Body() preorderTripDto: PreorderTripDto,
     @Res() res,
@@ -53,7 +55,8 @@ export class PreorderTripController {
       const { userId, when } = preorderTripDto;
 
       await this.preorderTripService.preorder(preorderTripDto);
-      this.sendNotification.notifyAllDrivers(preorderTripDto, userId, when);
+
+      this.sendNotification.notifyNearDrivers(preorderTripDto, userId, when);
 
       res.status(HttpStatus.CREATED).json({ message: 'Preorder created' });
     } catch (err) {
@@ -74,7 +77,7 @@ export class PreorderTripController {
     }
   }
 
-  @Put('confirmDriver')
+  @Put('confirm-driver')
   @ApiOperation({ summary: 'User confirm driver' })
   async confirmDriver(
     @Body() confirmDriverOfferDto: ConfirmDriverOfferDto,
@@ -86,7 +89,7 @@ export class PreorderTripController {
 
       await this.preorderTripService.confirmDriver(confirmDriverOfferDto);
 
-      res.json({ message: 'Preorder accepted' });
+      res.json({ message: 'You agreed with driver' });
     } catch (err) {
       res.status(err.status).json({ message: err.detail || err.message });
     }

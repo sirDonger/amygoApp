@@ -33,7 +33,6 @@ export class SignupDriverDto {
     type: 'file',
     required: false,
   })
-  @IsOptional()
   profileImage: string;
 
   @IsEmail()
@@ -99,12 +98,4 @@ export class SignupDriverDto {
     description: 'Short description of yourself',
   })
   description: string;
-
-  @IsNotEmpty()
-  @ApiProperty({
-    required: true,
-    example: 'true',
-    description: 'Boolean type (true or false)',
-  })
-  isVerified: boolean;
 }

@@ -132,7 +132,7 @@ export class DriverController {
         req.user,
       );
 
-      res.json({ message: 'Preorder trip is accepted' });
+      res.json({ message: `You offer a trip` });
     } catch (err) {
       console.log(err);
       res

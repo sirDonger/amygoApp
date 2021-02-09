@@ -27,20 +27,12 @@ export class PreorderTripService {
 
   async findAllNotAcceptedPreorderTrips(): Promise<PreorderTrip[]> {
     //TODO limit, order by location....
-    const preorderTrips = await this.preorderTripRepository.find({
-      select: [
-        'preorderTripId',
-        'when',
-        'where',
-        'from',
-        'userId',
-        'numberOfPeople',
-      ],
-      where: [
-        { statusOfPreorderTrip: PreorderTripStatus.WAITING_FOR_CONFIRMATION },
-        { statusOfPreorderTrip: PreorderTripStatus.NO_OFFERING },
-      ],
-    });
+    const preorderTrips = await this.preorderTripRepository
+      .createQueryBuilder('preorderTrips')
+      .where('preorderTrips.when > :start_at', {
+        start_at: new Date(),
+      })
+      .getMany();
 
     return preorderTrips;
   }
@@ -49,6 +41,7 @@ export class PreorderTripService {
     preorderTripId: string,
     driver: Driver,
   ): Promise<void> {
+    console.log(preorderTripId, 'preorderTripId');
     const preorderTrip = await this.preorderTripRepository.findOne({
       where: {
         preorderTripId,
@@ -58,7 +51,6 @@ export class PreorderTripService {
     if (!preorderTrip) {
       throw new NotFoundException();
     }
-    //TODO send user notification to preorderTrip.userId
 
     preorderTrip.statusOfPreorderTrip =
       PreorderTripStatus.WAITING_FOR_CONFIRMATION;
@@ -103,16 +95,15 @@ export class PreorderTripService {
   }
 
   async getAllOffers(userId: string) {
-    console.log(userId, 'userId');
     const allOffers = await this.preorderTripRepository.findOne({
       where: {
         userId,
         statusOfPreorderTrip: PreorderTripStatus.WAITING_FOR_CONFIRMATION,
       },
     });
-    if (!allOffers || allOffers.drivers.length) {
-      throw new NotFoundException();
-    }
+    // if (!allOffers || allOffers.drivers.length) {
+    //   throw new NotFoundException();
+    // }
 
     return {
       preorderTripId: allOffers.preorderTripId,
@@ -147,6 +138,7 @@ export class PreorderTripService {
       preorderTripId,
       preorderTrip.when,
       preorderTrip.drivers[0],
+      preorderTrip.userId,
     );
 
     await this.preorderTripRepository.save(preorderTrip);

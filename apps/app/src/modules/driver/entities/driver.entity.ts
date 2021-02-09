@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { constant } from '../../../constants';
 import { Trip } from '../../trip/entities/trip.entity';
 import { DocumentsStatus } from '../documentStatus.enum';
@@ -37,13 +37,14 @@ export class Driver {
   @Column({ nullable: true })
   emergencyContact: string;
 
-  @Column("text")
+  @Column('text')
   description: string;
 
-  @OneToMany(() => Trip, driver => Driver)
-  trips: Trip[]
+  @OneToMany(() => Trip, (driver) => Driver)
+  trips: Trip[];
 
-  @Column()
+  //TODO default false!!!, for testing
+  @Column({ default: true })
   isVerified: boolean;
 
   @Column('text', { array: true, default: () => 'array[]::text[]' })
@@ -51,4 +52,8 @@ export class Driver {
 
   @Column({ default: DocumentsStatus.NOT_PROVIDED })
   documentsStatus: string;
+
+  //TODO default false
+  @Column({ default: true })
+  isOnline: boolean;
 }
