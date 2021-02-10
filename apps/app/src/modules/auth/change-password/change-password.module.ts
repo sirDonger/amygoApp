@@ -9,10 +9,20 @@ import { UserModule } from '../../user/user.module';
 import { DriverService } from '../../driver/driver.service';
 import { Car } from '../../driver/entities/car.entity';
 import { Trip } from '../../trip/entities/trip.entity';
+import { Merchant } from '../../merchant/entities/merchant.entity';
+import { MerchantService } from '../../merchant/merchant.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Driver, Car, Trip]), UserModule],
+  imports: [
+    TypeOrmModule.forFeature([User, Driver, Car, Trip, Merchant]),
+    UserModule,
+  ],
   controllers: [ChangePasswordController],
-  providers: [ChangePasswordService, UserService, DriverService],
+  providers: [
+    ChangePasswordService,
+    UserService,
+    DriverService,
+    MerchantService,
+  ],
 })
 export class ChangePasswordModule {}

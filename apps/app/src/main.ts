@@ -4,13 +4,12 @@ import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as rateLimit from 'express-rate-limit';
 import { constant } from './constants/';
-import * as helmet from 'helmet';
+import { SwaggerMessagesEnum } from './constants/messagesEnum';
 
 (async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix('api');
-  // app.use(helmet());
-  //TODO specify port
+
   app.enableCors();
   app.useGlobalPipes(
     new ValidationPipe({
@@ -30,14 +29,7 @@ import * as helmet from 'helmet';
     .setTitle('API endpoints description')
     .setDescription('API endpoints description')
     .setVersion('1.0')
-    .addTag(
-      'preorder',
-      `In order to get notification from server, User and Driver should listen socket on its own Id. 
-        Guess => Driver after login, user after confirming driver offer.
-         Example: this.sockets.on(driverId, data => {
-              console.log('driverId', data); 
-            })`,
-    )
+    .addTag('preorder', SwaggerMessagesEnum.DESCRIBE_PREORDER_REQUIREMENTS)
     .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);

@@ -7,13 +7,14 @@ import { JwtPayloadInterface } from './interfaces/jwt.payload.interface';
 import { MessagesEnum } from '../../../constants/messagesEnum';
 import { ResponseDto } from '../dtoResponse/response.dto';
 import { DriverService } from '../../driver/driver.service';
-import { sign } from 'jsonwebtoken';
+import { MerchantService } from '../../merchant/merchant.service';
 
 @Injectable()
 export class SignInService {
   constructor(
     private readonly userService: UserService,
     private readonly driverService: DriverService,
+    private readonly merchantService: MerchantService,
     private readonly jwtService: JwtService,
   ) {}
 
@@ -23,26 +24,39 @@ export class SignInService {
   ): Promise<ResponseDto> {
     let userData;
     const emailValidator = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$/;
-    
+
     if (role === 'user') {
-      if(emailValidator.test(signInUserDto.login)){
+      if (emailValidator.test(signInUserDto.login)) {
         userData = await this.userService.findByEmail(
           signInUserDto.login.toLowerCase(),
         );
       } else {
         userData = await this.userService.findByPhoneNumber(
-          signInUserDto.login
+          signInUserDto.login,
         );
       }
-    } 
-    else {
-      if(emailValidator.test(signInUserDto.login)){
+    }
+
+    if (role === 'driver') {
+      if (emailValidator.test(signInUserDto.login)) {
         userData = await this.driverService.findByEmail(
           signInUserDto.login.toLowerCase(),
         );
       } else {
         userData = await this.driverService.findByPhoneNumber(
-          signInUserDto.login
+          signInUserDto.login,
+        );
+      }
+    }
+
+    if (role === 'merchant') {
+      if (emailValidator.test(signInUserDto.login)) {
+        userData = await this.merchantService.findByEmail(
+          signInUserDto.login.toLowerCase(),
+        );
+      } else {
+        userData = await this.merchantService.findByPhoneNumber(
+          signInUserDto.login,
         );
       }
     }

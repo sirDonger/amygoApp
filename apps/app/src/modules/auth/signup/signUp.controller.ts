@@ -19,7 +19,17 @@ import {
   ApiConsumes,
   ApiCreatedResponse,
 } from '@nestjs/swagger';
+import { SignupMerchantDto } from './dto/signup.merchant.dto';
+import { SwaggerMessagesEnum } from '../../../constants/messagesEnum';
 
+@ApiConflictResponse({
+  description: 'Email or phoneNumber already exists!',
+})
+@ApiBadRequestResponse({
+  description: SwaggerMessagesEnum.API_BAD_REQUEST_RESPONSE,
+})
+@UseInterceptors(FileInterceptor('profileImage'))
+@ApiConsumes('multipart/form-data')
 @Controller('/auth/signUp')
 export class SignupController {
   constructor(
@@ -28,33 +38,26 @@ export class SignupController {
   ) {}
 
   @Post('user')
-  @UseInterceptors(FileInterceptor('profileImage'))
-  @ApiConflictResponse({
-    description: 'Email or phoneNumber already exists!',
-  })
-  @ApiConsumes('multipart/form-data')
-  @ApiBadRequestResponse({
-    description:
-      'Please read a message in response ' +
-      "body, to figure out which validation constraint you didn't pass",
-  })
   @ApiCreatedResponse({ description: 'Successfully created new user!' })
   public async registerUser(
     @Res() res,
-    @UploadedFile() image,
+    @UploadedFile() profileImage,
     @Body() signupUserDto: SignupUserDto,
   ): Promise<void> {
     try {
-      if (image) {
-        this.fileUploadService.isFileValid(image);
-        image.originalname = Date.now() + image.originalname;
+      if (profileImage) {
+        this.fileUploadService.isFileValid(profileImage);
+        profileImage.originalname = Date.now() + profileImage.originalname;
         signupUserDto.profileImage =
-          process.env.S3_BUCKET_URL + image.originalname;
+          process.env.S3_BUCKET_URL + profileImage.originalname;
       }
       await this.signupService.signupUser(signupUserDto);
 
-      if (image) {
-        await this.fileUploadService.upload(image);
+      if (profileImage) {
+        await this.fileUploadService.upload(
+          profileImage,
+          process.env.S3_BUCKET_NAME_PROFILE_IMAGES,
+        );
       }
 
       res.status(HttpStatus.CREATED).json({
@@ -62,39 +65,32 @@ export class SignupController {
       });
     } catch (err) {
       res
-        .status(HttpStatus.CONFLICT)
+        .status(err.status || HttpStatus.CONFLICT)
         .json({ message: err.detail || err.message });
     }
   }
 
   @Post('driver')
-  @UseInterceptors(FileInterceptor('profileImage'))
-  @ApiConflictResponse({
-    description: 'Email or phoneNumber already exists!',
-  })
-  @ApiConsumes('multipart/form-data')
-  @ApiBadRequestResponse({
-    description:
-      'Please read a message in response ' +
-      "body, to figure out which validation constraint you didn't pass",
-  })
   @ApiCreatedResponse({ description: 'Successfully created new driver!' })
   public async registerDriver(
     @Res() res,
-    @UploadedFile() image,
+    @UploadedFile() profileImage,
     @Body() signupDriverDto: SignupDriverDto,
   ): Promise<void> {
     try {
-      if (image) {
-        this.fileUploadService.isFileValid(image);
-        image.originalname = Date.now() + image.originalname;
+      if (profileImage) {
+        this.fileUploadService.isFileValid(profileImage);
+        profileImage.originalname = Date.now() + profileImage.originalname;
         signupDriverDto.profileImage =
-          process.env.S3_BUCKET_URL + image.originalname;
+          process.env.S3_BUCKET_URL + profileImage.originalname;
       }
       await this.signupService.signupDriver(signupDriverDto);
 
-      if (image) {
-        await this.fileUploadService.upload(image);
+      if (profileImage) {
+        await this.fileUploadService.upload(
+          profileImage,
+          process.env.S3_BUCKET_NAME_PROFILE_IMAGES,
+        );
       }
 
       res.status(HttpStatus.CREATED).json({
@@ -102,7 +98,40 @@ export class SignupController {
       });
     } catch (err) {
       res
-        .status(HttpStatus.CONFLICT)
+        .status(err.status || HttpStatus.CONFLICT)
+        .json({ message: err.detail || err.message });
+    }
+  }
+
+  @Post('merchant')
+  @ApiCreatedResponse({ description: 'Successfully created new merchant!' })
+  public async registerMerchant(
+    @Res() res,
+    @UploadedFile() profileImage,
+    @Body() signupMerchantDto: SignupMerchantDto,
+  ): Promise<void> {
+    try {
+      if (profileImage) {
+        this.fileUploadService.isFileValid(profileImage);
+        profileImage.originalname = Date.now() + profileImage.originalname;
+        signupMerchantDto.profileImage =
+          process.env.S3_BUCKET_URL + profileImage.originalname;
+      }
+      await this.signupService.signupMerchant(signupMerchantDto);
+
+      if (profileImage) {
+        await this.fileUploadService.upload(
+          profileImage,
+          process.env.S3_BUCKET_NAME_PROFILE_IMAGES,
+        );
+      }
+
+      res.status(HttpStatus.CREATED).json({
+        message: MessagesEnum.NEW_MERCHANT_CREATED,
+      });
+    } catch (err) {
+      res
+        .status(err.status || HttpStatus.CONFLICT)
         .json({ message: err.detail || err.message });
     }
   }

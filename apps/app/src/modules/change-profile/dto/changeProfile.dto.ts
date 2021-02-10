@@ -38,6 +38,7 @@ export class ChangeProfileDto {
     example: 'mymail@gmail.com',
     description: 'Correct email address',
   })
+  @IsOptional()
   email: string;
 
   @IsString()

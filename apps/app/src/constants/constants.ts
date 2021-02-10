@@ -1,5 +1,5 @@
 export const constant = {
-  MAX_FILE_SIZE: 6_000_000,
+  MAX_FILE_SIZE: 6 * 1024 * 1024,
   ALLOWED_MIME_TYPES: [
     'image/jpeg',
     'image/jpg',
@@ -7,6 +7,11 @@ export const constant = {
     'image/svg',
     'image/tiff',
     'image/webp',
+  ],
+  ALLOWED_MIME_TYPES_DOCUMENTS: [
+    'application/msword',
+    'application/pdf',
+    'text/plain',
   ],
 
   IMAGE_DEFAULT_URL:

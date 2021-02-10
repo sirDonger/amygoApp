@@ -10,7 +10,7 @@ import { ValidationMessagesEnum } from '../../../../constants/messagesEnum';
 import { MatchTwoFields } from '../../../../helpers/validators/matchTwoField.decorator';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class SignupDriverDto {
+export class SignupMerchantDto {
   @IsString({ message: ValidationMessagesEnum.NAME })
   @MaxLength(40, { message: ValidationMessagesEnum.NAME })
   @ApiProperty({
@@ -85,16 +85,8 @@ export class SignupDriverDto {
   @MaxLength(15)
   @ApiProperty({
     required: false,
-    example: '"15261865"',
+    example: '"1526186s5"',
     description: 'Correct phoneNumber, shorter than 15 characters',
   })
   emergencyContact: string;
-
-  @IsOptional()
-  @ApiProperty({
-    required: true,
-    example: "I'm ...",
-    description: 'Short description of yourself',
-  })
-  description: string;
 }

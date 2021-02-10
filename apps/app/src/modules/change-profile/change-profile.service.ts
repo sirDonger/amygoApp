@@ -1,38 +1,33 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
-import { MessagesEnum } from '../../constants/messagesEnum';
+import { Injectable } from '@nestjs/common';
 import { ChangeProfileDto } from './dto/changeProfile.dto';
 import { UserService } from '../user/user.service';
-import { ResponseDto } from '../auth/dtoResponse/response.dto';
 import { DriverService } from '../driver/driver.service';
+import { MerchantService } from '../merchant/merchant.service';
+import { Merchant } from '../merchant/entities/merchant.entity';
+import { Driver } from '../driver/entities/driver.entity';
+import { User } from '../user/entities/user.entity';
 
 @Injectable()
 export class ChangeProfileService {
   constructor(
     private readonly userService: UserService,
     private readonly driverService: DriverService,
+    private readonly merchantService: MerchantService,
   ) {}
   public async updateProfile(
+    user: User | Driver | Merchant,
     changeProfileDto: ChangeProfileDto,
     userId: string,
     role: string,
-  ): Promise<ResponseDto> {
-    let user;
-    if (role === 'user') {
-      user = await this.userService.findById(userId);
-    } else {
-      user = await this.driverService.findById(userId);
-    }
-
-    if (!user) {
-      return {
-        message: MessagesEnum.SIGN_IN_FAILED,
-        status: HttpStatus.UNAUTHORIZED,
-      };
-    }
+  ): Promise<void> {
     if (role === 'user') {
       await this.userService.updateProfile(user, changeProfileDto);
-    } else {
+    }
+    if (role === 'driver') {
       await this.driverService.updateProfile(user, changeProfileDto);
+    }
+    if (role === 'merchant') {
+      await this.merchantService.updateProfile(user, changeProfileDto);
     }
   }
 }

@@ -13,11 +13,13 @@ import { Driver } from '../../driver/entities/driver.entity';
 import { DriverService } from '../../driver/driver.service';
 import { Car } from '../../driver/entities/car.entity';
 import { Trip } from '../../trip/entities/trip.entity';
+import { MerchantService } from '../../merchant/merchant.service';
+import { Merchant } from '../../merchant/entities/merchant.entity';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    TypeOrmModule.forFeature([User, Driver, Car, Trip]),
+    TypeOrmModule.forFeature([User, Driver, Car, Trip, Merchant]),
     JwtModule.register({
       secret: process.env.JWT_ACCESS_SECRET,
       signOptions: {
@@ -34,6 +36,7 @@ import { Trip } from '../../trip/entities/trip.entity';
     JwtStrategyConfig,
     FileUploadService,
     DriverService,
+    MerchantService,
   ],
   controllers: [SignInController],
   exports: [PassportModule, JwtStrategyConfig],

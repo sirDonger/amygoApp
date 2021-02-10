@@ -28,6 +28,12 @@ import {
 
 @Controller('/:role/profile/update')
 export class ChangeProfileController {
+  constructor(
+    private readonly changeProfileService: ChangeProfileService,
+    private readonly userService: UserService,
+    private readonly fileUploadService: FileUploadService,
+  ) {}
+
   @Post()
   @UseGuards(AuthGuard('jwt'))
   @UseInterceptors(FileInterceptor('profileImage'))
@@ -50,21 +56,32 @@ export class ChangeProfileController {
     @Res() res,
   ): Promise<void> {
     try {
-      const { id } = req.user;
+      const { id, profileImage } = req.user;
 
       if (image) {
         this.fileUploadService.isFileValid(image);
         image.originalname = Date.now() + image.originalname;
         changeProfileDto.profileImage =
-          process.env.S3_BUCKET_URL + image.originalname;
+          process.env.S3_BUCKET_URL_PROFILE_IMAGES + image.originalname;
 
-        const { profileImage } = await this.userService.findById(id);
-
-        await this.fileUploadService.delete(profileImage);
-        await this.fileUploadService.upload(image);
+        if (profileImage) {
+          await this.fileUploadService.delete(
+            profileImage,
+            process.env.S3_BUCKET_NAME_PROFILE_IMAGES,
+          );
+        }
+        await this.fileUploadService.upload(
+          image,
+          process.env.S3_BUCKET_NAME_PROFILE_IMAGES,
+        );
       }
 
-      await this.changeProfileService.updateProfile(changeProfileDto, id, role);
+      await this.changeProfileService.updateProfile(
+        req.user,
+        changeProfileDto,
+        id,
+        role,
+      );
 
       res.status(HttpStatus.NO_CONTENT).send();
     } catch (err) {
@@ -73,10 +90,4 @@ export class ChangeProfileController {
         .json({ message: err.response.message || err.message });
     }
   }
-
-  constructor(
-    private readonly changeProfileService: ChangeProfileService,
-    private readonly userService: UserService,
-    private readonly fileUploadService: FileUploadService,
-  ) {}
 }

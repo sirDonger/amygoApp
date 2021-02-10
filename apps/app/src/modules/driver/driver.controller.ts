@@ -35,6 +35,7 @@ import { AcceptPreorderTripDto } from '../preorder-trip/dto/acceptPreorderTrip.d
 
 @UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth()
+@ApiUnauthorizedResponse({ description: 'Provide valid access token' })
 @Controller('driver')
 export class DriverController {
   constructor(
@@ -68,11 +69,10 @@ export class DriverController {
   @Post('documents')
   @UseInterceptors(FilesInterceptor('documents'))
   @ApiConsumes('multipart/form-data')
-  @ApiUnauthorizedResponse({ description: 'Provide valid access token' })
   @ApiNoContentResponse({
     description: 'Congrats, you added documents',
   })
-  @ApiOperation({ summary: 'Driver adds documents and wait for confirmation' })
+  @ApiOperation({ summary: 'Driver adds documents...' })
   public async addDocuments(
     @Req() req,
     @Res() res,
@@ -82,12 +82,17 @@ export class DriverController {
     try {
       const { user } = req;
 
-      documents.forEach((doc) => this.uploadService.isFileValid(doc));
+      documents.forEach((doc) => this.uploadService.isDocumentsValid(doc));
 
       documents.forEach((doc) => {
         doc.originalname += Date.now();
-        user.documents.push(process.env.S3_BUCKET_URL + doc.originalname);
-        this.uploadService.upload(doc);
+        user.documents.push(
+          process.env.S3_BUCKET_URL_DRIVER_DOCUMENTS + doc.originalname,
+        );
+        this.uploadService.upload(
+          doc,
+          process.env.S3_BUCKET_NAME_DRIVER_DOCUMENTS,
+        );
       });
 
       user.documentsStatus = DocumentsStatus.WAITING_FOR_CONFIRMATION;
@@ -134,7 +139,6 @@ export class DriverController {
 
       res.json({ message: `You offer a trip` });
     } catch (err) {
-      console.log(err);
       res
         .status(err.status)
         .json({ message: err.response.message || err.message });

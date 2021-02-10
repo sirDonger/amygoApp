@@ -46,10 +46,10 @@ export class ChangePasswordController {
     @Req() req,
   ): Promise<void> {
     try {
-      const { id } = req.user;
+      const { user } = req;
       const response = await this.changePasswordService.changePassword(
         changePasswordDto,
-        id,
+        user.id,
         role,
       );
 

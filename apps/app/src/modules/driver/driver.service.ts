@@ -96,7 +96,7 @@ export class DriverService {
     });
   }
 
-  public async createCar(carDto: CarDto, userId) {
+  public async createCar(carDto: CarDto, userId){
     const driver = await this.driverRepository.findOne({
       where: {
         id: userId,

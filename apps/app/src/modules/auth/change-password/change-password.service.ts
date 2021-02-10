@@ -5,12 +5,14 @@ import { MessagesEnum } from '../../../constants/messagesEnum';
 import { ResponseDto } from '../dtoResponse/response.dto';
 import { UserService } from '../../user/user.service';
 import { DriverService } from '../../driver/driver.service';
+import { MerchantService } from '../../merchant/merchant.service';
 
 @Injectable()
 export class ChangePasswordService {
   constructor(
-    private userService: UserService,
+    private readonly userService: UserService,
     private readonly driverService: DriverService,
+    private readonly merchantService: MerchantService,
   ) {}
   async changePassword(
     changePasswordDto: ChangePasswordDto,
@@ -21,9 +23,14 @@ export class ChangePasswordService {
     let user;
     if (role === 'user') {
       user = await this.userService.findById(userId);
-    } else {
+    }
+    if (role === 'driver') {
       user = await this.driverService.findById(userId);
     }
+    if (role === 'merchant') {
+      user = await this.merchantService.findById(userId);
+    }
+
     if (!user) {
       return {
         message: MessagesEnum.EMAIL_NOT_EXISTS,
@@ -49,11 +56,14 @@ export class ChangePasswordService {
 
     const newHashedPassword = await bcrypt.hash(newPassword, 10);
 
-    if (role === 'user') {
+    if (role === 'user')
       await this.userService.changePassword(user, newHashedPassword);
-    } else {
+
+    if (role === 'driver')
       await this.driverService.changePassword(user, newHashedPassword);
-    }
+
+    if (role === 'merchant')
+      await this.merchantService.changePassword(user, newHashedPassword);
 
     return {
       message: MessagesEnum.PASSWORD_CHANGED,

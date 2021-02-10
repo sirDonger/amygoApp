@@ -9,11 +9,10 @@ import { constant } from '../../constants';
 
 @Injectable()
 export class FileUploadService {
-  async upload(file) {
+  async upload(file, bucketName: string) {
     const { originalname } = file;
-    const bucketS3 = process.env.S3_BUCKET_NAME;
 
-    await this.uploadS3(file.buffer, bucketS3, originalname);
+    await this.uploadS3(file.buffer, bucketName, originalname);
   }
 
   async uploadS3(file, bucket, name) {
@@ -26,6 +25,7 @@ export class FileUploadService {
 
     await s3.upload(params, (err, data) => {
       if (err) {
+        console.log(err, 'AWS error due connection');
         throw new ServiceUnavailableException(err);
       }
       return data;
@@ -40,7 +40,6 @@ export class FileUploadService {
   }
 
   isFileValid(file) {
-    console.log(file)
     if (file.size > constant.MAX_FILE_SIZE) {
       throw new PayloadTooLargeException();
     }
@@ -50,14 +49,27 @@ export class FileUploadService {
     }
   }
 
-  async delete(imageName) {
+  isDocumentsValid(file) {
+    if (file.size > constant.MAX_FILE_SIZE) {
+      throw new PayloadTooLargeException();
+    }
+
+    if (
+      !constant.ALLOWED_MIME_TYPES_DOCUMENTS.includes(file.mimetype) ||
+      !constant.ALLOWED_MIME_TYPES.includes(file.mimetype)
+    ) {
+      throw new UnsupportedMediaTypeException();
+    }
+  }
+
+  async delete(imageName, bucketName: string) {
     const s3 = this.getS3();
     const params = {
-      Bucket: process.env.S3_BUCKET_NAME,
-      Key: imageName.slice(process.env.S3_BUCKET_URL.length),
+      Bucket: bucketName,
+      Key: imageName.slice(process.env.S3_BUCKET_URL_PROFILE_IMAGES.length),
     };
 
-    await s3.createBucket({ Bucket: process.env.S3_BUCKET_NAME }, function () {
+    await s3.createBucket({ Bucket: bucketName }, function () {
       s3.deleteObject(params, function (err, data) {
         if (err) {
           throw new ServiceUnavailableException(err);

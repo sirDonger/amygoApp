@@ -12,6 +12,7 @@ import { TripModule } from './modules/trip/trip.module';
 import { AdminModule } from './modules/admin/admin.module';
 import { PreorderTripModule } from './modules/preorder-trip/preorder-trip.module';
 import { ScheduleModule } from '@nestjs/schedule';
+import { MerchantModule } from './modules/merchant/merchant.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { ScheduleModule } from '@nestjs/schedule';
     TripModule,
     AdminModule,
     PreorderTripModule,
+    MerchantModule,
   ],
   controllers: [],
   providers: [AppGateway],

@@ -26,11 +26,6 @@ export default class SendNotificationService {
     );
     name += Date.now();
 
-    console.log('notify user');
-    console.log(new Date(), 'now');
-    console.log(when, 'when');
-    console.log('notify user');
-
     const job = new CronJob(when, () => {
       this.appGateway.notifyUserOfDriverComing(driver, null, userId);
       this.schedulerRegistry.deleteCronJob(name);
@@ -47,11 +42,6 @@ export default class SendNotificationService {
   ) {
     name += Date.now();
     const { when, from, where, numberOfPeople } = preorderTripDto;
-
-    console.log('notify driver');
-    console.log(new Date(), 'now');
-    console.log(when, 'when');
-    console.log('notify driver');
 
     const whenNotify = new Date(
       new Date(time).getTime() - constant.NOTIFY_DRIVERS_OF_PREORDER,

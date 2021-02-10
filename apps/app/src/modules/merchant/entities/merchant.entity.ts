@@ -1,10 +1,9 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { constant } from '../../../constants';
-import { Trip } from '../../trip/entities/trip.entity';
-import { DocumentsStatus } from '../documentStatus.enum';
+import { DocumentsStatus } from '../../driver/documentStatus.enum';
 
 @Entity()
-export class Driver {
+export class Merchant {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -37,12 +36,6 @@ export class Driver {
   @Column({ nullable: true })
   emergencyContact: string;
 
-  @Column({ nullable: true })
-  description: string;
-
-  @OneToMany(() => Trip, (driver) => Driver)
-  trips: Trip[];
-
   //TODO default false!!!, for testing
   @Column({ default: true })
   isVerified: boolean;
@@ -53,7 +46,6 @@ export class Driver {
   @Column({ default: DocumentsStatus.NOT_PROVIDED })
   documentsStatus: string;
 
-  //TODO default false
   @Column({ default: true })
   isOnline: boolean;
 }

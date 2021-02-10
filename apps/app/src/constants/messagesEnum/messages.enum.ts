@@ -7,7 +7,8 @@ export enum MessagesEnum {
   NOT_ALLOWED_OPERATION = 'User cant change values of another user!',
   NEW_USER_CREATED = 'Congrats, new user created!',
   NEW_DRIVER_CREATED = 'Congrats, new driver created!',
+  NEW_MERCHANT_CREATED = 'Congrats, new merchant created!',
   PROFILE_CHANGED = 'You successfully changed your profile',
-  TRIP_CHANGED = 'You successfully attached driver to trip',
-  TRIP_USER_NOT_ATTACHED = 'User was not attached to this trip'
+  TRIP_CHANGED = 'You successfully attached user to trip',
+  TRIP_USER_NOT_ATTACHED = 'User was not attached to this trip',
 }
