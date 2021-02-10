@@ -4,7 +4,9 @@ import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as rateLimit from 'express-rate-limit';
 import { constant } from './constants/';
-import * as helmet from 'helmet';
+import * as fs from 'fs';
+import * as http from 'http';
+import * as https from 'https';
 
 (async function bootstrap() {
   const app = await NestFactory.create(AppModule);

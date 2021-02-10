@@ -1,27 +1,40 @@
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy, VerifyCallback } from 'passport-google-oauth20';
 import { Injectable } from '@nestjs/common';
+import { SocialService } from '../social.service';
+import {Provider} from '../../../../constants/providers.enum';
+
 
 @Injectable()
-export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
-    constructor(){
+export class GoogleStrategy extends PassportStrategy(Strategy, Provider.GOOGLE) {
+    constructor(
+      private readonly socialService: SocialService
+    ){
         super({
-            clientID: '',
-            clientSecret: '',
+            clientID: process.env.GOOGLE_CLIENT_ID,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
             callbackURL: 'http://localhost:8083/api/auth/google/redirect',
             scope: ['email','profile']
         })
     }
 
     async validate (accessToken: string, refreshToken: string, profile: any, done: VerifyCallback): Promise<any> {
-        const { name, emails, photos } = profile
+        const { name, emails, photos, passwords } = profile
+        const jwt = await this.socialService.validateOAuthLogin(profile.id, Provider.GOOGLE);
         const user = {
           email: emails[0].value,
           firstName: name.givenName,
           lastName: name.familyName,
           picture: photos[0].value,
-          accessToken
         }
-        done(null, user);
+
+        const payload ={
+          user,
+          provider: Provider.GOOGLE,
+          jwt: jwt,
+          googleAccessToken: accessToken
+        }
+
+        done(null, payload);
       }
 }

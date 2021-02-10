@@ -7,7 +7,6 @@ import { JwtPayloadInterface } from './interfaces/jwt.payload.interface';
 import { MessagesEnum } from '../../../constants/messagesEnum';
 import { ResponseDto } from '../dtoResponse/response.dto';
 import { DriverService } from '../../driver/driver.service';
-import { sign } from 'jsonwebtoken';
 
 @Injectable()
 export class SignInService {

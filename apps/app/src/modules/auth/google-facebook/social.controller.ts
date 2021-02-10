@@ -15,6 +15,16 @@ export class SocialController{
     @Get('google/redirect')
     @UseGuards(AuthGuard('google'))
     googleAuthRedirect(@Req() req){
-        return this.socialService.googleLogin(req);
+        return this.socialService.socialLogin(req);
+    }
+
+    @Get('facebook/login')
+    @UseGuards(AuthGuard('facebook'))
+    async facebookLogin(@Req() req){}
+
+    @Get('facebook/redirect')
+    @UseGuards(AuthGuard('facebook'))
+    facebookAuthRedirect(@Req() req){
+        return this.socialService.socialLogin(req)
     }
 }
