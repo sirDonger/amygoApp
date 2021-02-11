@@ -25,14 +25,12 @@ export class GoogleStrategy extends PassportStrategy(Strategy, Provider.GOOGLE) 
           email: emails[0].value,
           firstName: name.givenName,
           lastName: name.familyName,
-          picture: photos[0].value,
         }
 
         const payload ={
           user,
           provider: Provider.GOOGLE,
-          jwt: jwt,
-          googleAccessToken: accessToken
+          jwt: jwt
         }
 
         done(null, payload);
