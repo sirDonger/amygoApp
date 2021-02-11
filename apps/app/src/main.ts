@@ -4,7 +4,10 @@ import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as rateLimit from 'express-rate-limit';
 import { constant } from './constants/';
+<<<<<<< HEAD
 import { SwaggerMessagesEnum } from './constants/messagesEnum';
+=======
+>>>>>>> feature/google-facebook-auth
 
 (async function bootstrap() {
   const app = await NestFactory.create(AppModule);
