@@ -1,6 +1,7 @@
 import {Controller, Get, Req, UseGuards} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { SocialService } from './social.service';
+const resolvePkg = require('resolve-pkg');
 
 @Controller('auth')
 export class SocialController{
@@ -10,7 +11,9 @@ export class SocialController{
 
     @Get('google/login')
     @UseGuards(AuthGuard('google'))
-    async googleAuth(@Req() req){}
+    async googleAuth(@Req() req){
+        console.log(resolvePkg('@some/package'));
+    }
 
     @Get('google/redirect')
     @UseGuards(AuthGuard('google'))
