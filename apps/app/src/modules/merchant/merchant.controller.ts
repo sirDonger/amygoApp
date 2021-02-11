@@ -23,11 +23,12 @@ import { DocumentsStatus } from '../driver/documentStatus.enum';
 import { FileUploadService } from '../file-upload';
 import { MerchantService } from './merchant.service';
 import { AuthGuard } from '@nestjs/passport';
+import {SwaggerMessagesEnum} from "../../constants/messagesEnum";
 
 @Controller('merchant')
 @UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth()
-@ApiUnauthorizedResponse({ description: 'Provide valid access token' })
+@ApiUnauthorizedResponse({ description: SwaggerMessagesEnum.API_UNAUTHORIZED_RESPONSE })
 export class MerchantController {
   constructor(
     private readonly uploadService: FileUploadService,

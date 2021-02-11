@@ -25,6 +25,7 @@ import {
   ApiUnauthorizedResponse,
   ApiUnsupportedMediaTypeResponse,
 } from '@nestjs/swagger';
+import {SwaggerMessagesEnum} from "../../constants/messagesEnum";
 
 @Controller('/:role/profile/update')
 export class ChangeProfileController {
@@ -37,17 +38,13 @@ export class ChangeProfileController {
   @Post()
   @UseGuards(AuthGuard('jwt'))
   @UseInterceptors(FileInterceptor('profileImage'))
-  @ApiParam({ name: 'role', enum: ['user', 'driver'] })
+  @ApiParam({ name: 'role', enum: ['user', 'driver', 'merchant'] })
   @ApiBearerAuth()
   @ApiNoContentResponse({ description: 'Congrats, you changed your profile!' })
-  @ApiUnauthorizedResponse({ description: 'Provide valid token' })
+  @ApiUnauthorizedResponse({ description: SwaggerMessagesEnum.API_UNAUTHORIZED_RESPONSE })
   @ApiConsumes('multipart/form-data')
-  @ApiPayloadTooLargeResponse({
-    description: "File's size should be less than 6Mb",
-  })
-  @ApiUnsupportedMediaTypeResponse({
-    description: 'file extensions allowed: jpg, jpeg, png, svg, tiff, webp',
-  })
+  @ApiPayloadTooLargeResponse({ description: SwaggerMessagesEnum.API_PAYLOAD_TOO_LARGE_RESPONSE })
+  @ApiUnsupportedMediaTypeResponse({ description: SwaggerMessagesEnum.API_UNSUPPORTED_MEDIA_TYPE_RESPONSE })
   public async updateProfile(
     @Body() changeProfileDto: ChangeProfileDto,
     @Param('role') role: string,

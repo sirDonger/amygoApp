@@ -17,17 +17,15 @@ import {
   ApiBadRequestResponse,
   ApiConflictResponse,
   ApiConsumes,
-  ApiCreatedResponse,
+  ApiCreatedResponse, ApiPayloadTooLargeResponse, ApiUnsupportedMediaTypeResponse,
 } from '@nestjs/swagger';
 import { SignupMerchantDto } from './dto/signup.merchant.dto';
 import { SwaggerMessagesEnum } from '../../../constants/messagesEnum';
 
-@ApiConflictResponse({
-  description: 'Email or phoneNumber already exists!',
-})
-@ApiBadRequestResponse({
-  description: SwaggerMessagesEnum.API_BAD_REQUEST_RESPONSE,
-})
+@ApiConflictResponse({ description: 'Email or phoneNumber already exists!' })
+@ApiBadRequestResponse({ description: SwaggerMessagesEnum.API_BAD_REQUEST_RESPONSE })
+@ApiPayloadTooLargeResponse({ description: SwaggerMessagesEnum.API_PAYLOAD_TOO_LARGE_RESPONSE })
+@ApiUnsupportedMediaTypeResponse({ description: SwaggerMessagesEnum.API_UNSUPPORTED_MEDIA_TYPE_RESPONSE })
 @UseInterceptors(FileInterceptor('profileImage'))
 @ApiConsumes('multipart/form-data')
 @Controller('/auth/signUp')

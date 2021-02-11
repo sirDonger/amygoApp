@@ -6,7 +6,7 @@ import {
   Matches,
   MaxLength,
 } from 'class-validator';
-import { ValidationMessagesEnum } from '../../../../constants/messagesEnum';
+import {SwaggerMessagesEnum, ValidationMessagesEnum} from '../../../../constants/messagesEnum';
 import { MatchTwoFields } from '../../../../helpers/validators/matchTwoField.decorator';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -15,7 +15,7 @@ export class SignupUserDto {
   @MaxLength(40, { message: ValidationMessagesEnum.NAME })
   @ApiProperty({
     example: 'Ivan',
-    description: 'Correct name shorter than 40 characters',
+    description: SwaggerMessagesEnum.DESCRIBE_NAME,
   })
   name: string;
 
@@ -23,13 +23,13 @@ export class SignupUserDto {
   @MaxLength(40)
   @ApiProperty({
     example: 'Pavlov',
-    description: 'Correct surname shorter than 40 characters',
+    description: SwaggerMessagesEnum.DESCRIBE_SURNAME,
   })
   surname: string;
 
   @ApiProperty({
     title: 'Attachment',
-    description: 'Size < 5Mb and format [jpg, png, svg, tiff, webp]',
+    description: SwaggerMessagesEnum.DESCRIBE_PROFILE_IMAGE,
     type: 'file',
     required: false,
   })
@@ -42,7 +42,7 @@ export class SignupUserDto {
   })
   @ApiProperty({
     example: 'mymail@gmail.com',
-    description: 'Correct email address',
+    description: SwaggerMessagesEnum.DESCRIBE_EMAIL,
   })
   email: string;
 
@@ -50,8 +50,7 @@ export class SignupUserDto {
   @IsString()
   @ApiProperty({
     example: 'Password123@',
-    description:
-      'Correct password which include at least one capital letter, one small and  one digit ',
+    description: SwaggerMessagesEnum.DESCRIBE_PASSWORD,
   })
   @Matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,60}$/, {
     message: ValidationMessagesEnum.PASSWORD,
@@ -67,8 +66,7 @@ export class SignupUserDto {
   })
   @ApiProperty({
     example: 'Password123@',
-    description:
-      'Correct password which include at least one capital letter, one small and  one digit ',
+    description: SwaggerMessagesEnum.DESCRIBE_CONFIRM_PASSWORD,
   })
   confirmPassword: string;
 
@@ -77,7 +75,7 @@ export class SignupUserDto {
   @MaxLength(15)
   @ApiProperty({
     example: '+380632412233',
-    description: 'Correct phoneNumber, shorter than 15 characters',
+    description: SwaggerMessagesEnum.DESCRIBE_PHONE_NUMBER,
   })
   phoneNumber: string;
 
@@ -87,7 +85,7 @@ export class SignupUserDto {
   @ApiProperty({
     required: false,
     example: '+380632412233',
-    description: 'Correct phoneNumber, shorter than 15 characters',
+    description: SwaggerMessagesEnum.DESCRIBE_EMERGENCY_CONTACT,
   })
   emergencyContact: string;
 }

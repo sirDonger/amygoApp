@@ -21,6 +21,7 @@ import {
   ApiPreconditionFailedResponse,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import {SwaggerMessagesEnum} from "../../../constants/messagesEnum";
 
 @Controller('/:role/auth/change-password')
 export class ChangePasswordController {
@@ -29,14 +30,14 @@ export class ChangePasswordController {
   @Post()
   @UseGuards(AuthGuard('jwt'))
   @ApiBearerAuth()
-  @ApiParam({ name: 'role', enum: ['user', 'driver'] })
+  @ApiParam({ name: 'role', enum: ['user', 'driver', 'merchant'] })
   @ApiNoContentResponse({
     description: 'Congrats, you successfully changed password!',
   })
   @ApiPreconditionFailedResponse({
     description: 'You should provide correct old password',
   })
-  @ApiUnauthorizedResponse({ description: 'Provide valid token' })
+  @ApiUnauthorizedResponse({ description: SwaggerMessagesEnum.API_UNAUTHORIZED_RESPONSE })
   @ApiBadRequestResponse({ description: 'Invalid payload' })
   @ApiForbiddenResponse({ description: 'Token should belongs to user' })
   public async changePassword(
