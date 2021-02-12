@@ -7,6 +7,7 @@ import { UserService } from '../../user/user.service';
 import { DriverService } from '../../driver/driver.service';
 import { SignupMerchantDto } from './dto/signup.merchant.dto';
 import { MerchantService } from '../../merchant/merchant.service';
+import { BonusDto } from '../../user/dto/bonus.dto';
 
 @Injectable()
 export class SignUpService {

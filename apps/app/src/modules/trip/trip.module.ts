@@ -9,9 +9,10 @@ import { Car } from '../driver/entities/car.entity';
 import { Rate } from './entities/rate.entity';
 import { DriverModule } from '../driver/driver.module';
 import { UserService } from '../user/user.service';
+import { Bonus } from '../user/entities/bonus.entity';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([User, Car, Driver, Trip, Rate]), DriverModule],
+    imports: [TypeOrmModule.forFeature([User, Car, Driver, Trip, Rate, Bonus]), DriverModule],
     providers: [TripService, UserService],
     controllers: [TripController]
 })

@@ -21,6 +21,7 @@ import {
 } from '@nestjs/swagger';
 import { SignupMerchantDto } from './dto/signup.merchant.dto';
 import { SwaggerMessagesEnum } from '../../../constants/messagesEnum';
+import { BonusDto } from '../../user/dto/bonus.dto';
 
 @ApiConflictResponse({ description: 'Email or phoneNumber already exists!' })
 @ApiBadRequestResponse({ description: SwaggerMessagesEnum.API_BAD_REQUEST_RESPONSE })

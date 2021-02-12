@@ -11,10 +11,11 @@ import { Car } from '../../driver/entities/car.entity';
 import { Trip } from '../../trip/entities/trip.entity';
 import { Merchant } from '../../merchant/entities/merchant.entity';
 import { MerchantService } from '../../merchant/merchant.service';
+import { Bonus } from '../../user/entities/bonus.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User, Driver, Car, Trip, Merchant]),
+    TypeOrmModule.forFeature([User, Driver, Car, Trip, Merchant, Bonus]),
     UserModule,
   ],
   controllers: [ChangePasswordController],

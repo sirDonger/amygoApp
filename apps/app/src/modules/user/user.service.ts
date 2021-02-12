@@ -5,12 +5,17 @@ import { UserDto } from './dto/user.dto';
 import { Repository } from 'typeorm';
 import { SignupUserDto } from '../auth/signup/dto/signupUser.dto';
 import { ChangeProfileDto } from '../change-profile/dto/changeProfile.dto';
+import { Bonus } from './entities/bonus.entity';
+import { BonusDto } from './dto/bonus.dto';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
+
+    @InjectRepository(Bonus)
+    private bonusRepository: Repository<Bonus>
   ) {}
 
   public async findByEmail(email: string): Promise<User> {
@@ -54,9 +59,28 @@ export class UserService {
 
   public async createUser(userDto: SignupUserDto): Promise<UserDto> {
     const user = await this.userRepository.save(userDto);
+
+    const bonus = new Bonus();
+    bonus.amount = 0;
+    bonus.user = user;
+    await this.bonusRepository.save(bonus);
     const { password, ...rest } = user;
 
     return rest;
+  }
+
+  public async findBonusById(userId){
+    const bonus = await this.bonusRepository.findOne({
+      where: {
+        user: userId,
+      },
+    });
+    console.log(bonus)
+
+    if (!bonus) {
+      throw new NotFoundException(`Bonuses #${userId} not found`);
+    }
+    return bonus;
   }
 
   public async updateProfile(user, userData: ChangeProfileDto) {

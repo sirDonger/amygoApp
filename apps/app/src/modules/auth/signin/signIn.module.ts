@@ -15,11 +15,12 @@ import { Car } from '../../driver/entities/car.entity';
 import { Trip } from '../../trip/entities/trip.entity';
 import { MerchantService } from '../../merchant/merchant.service';
 import { Merchant } from '../../merchant/entities/merchant.entity';
+import { Bonus } from '../../user/entities/bonus.entity';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    TypeOrmModule.forFeature([User, Driver, Car, Trip, Merchant]),
+    TypeOrmModule.forFeature([User, Driver, Car, Trip, Merchant, Bonus]),
     JwtModule.register({
       secret: process.env.JWT_ACCESS_SECRET,
       signOptions: {

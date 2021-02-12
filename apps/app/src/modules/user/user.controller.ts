@@ -36,4 +36,14 @@ export class UserController {
 
     return res.status(HttpStatus.OK).json(user);
   }
+
+  @Get('/bonuses')
+  @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth()
+  @ApiOkResponse({ description: 'Successfully signed in' })
+  @ApiUnauthorizedResponse({ description: 'Provide valid access token' })
+  public async getBonuses(@Req() req, @Res() res):Promise<void>{
+    const bonuses = await this.usersService.findBonusById(req.user.id);
+    return res.status(HttpStatus.OK).json(bonuses);
+  }
 }

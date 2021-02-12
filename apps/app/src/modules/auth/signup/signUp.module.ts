@@ -10,10 +10,11 @@ import { DriverService } from '../../driver/driver.service';
 import { Car } from '../../driver/entities/car.entity';
 import { MerchantService } from '../../merchant/merchant.service';
 import { Merchant } from '../../merchant/entities/merchant.entity';
+import { Bonus } from '../../user/entities/bonus.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User, Driver, Car, Merchant]),
+    TypeOrmModule.forFeature([User, Driver, Car, Merchant, Bonus]),
     FileUploadModule,
   ],
   providers: [SignUpService, UserService, DriverService, MerchantService],

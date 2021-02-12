@@ -11,9 +11,11 @@ import { DriverService } from '../driver/driver.service';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import SendNotificationService from './sendNotification.service';
 import { AppGateway } from '../../app.gateway';
+import { Bonus } from '../user/entities/bonus.entity';
+import { UserModule } from '../user/user.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Driver, Car, PreorderTrip])],
+  imports: [UserModule, TypeOrmModule.forFeature([User, Bonus, Driver, Car, PreorderTrip])],
   controllers: [PreorderTripController],
   providers: [
     PreorderTripService,
