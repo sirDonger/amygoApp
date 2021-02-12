@@ -17,7 +17,8 @@ export class JwtStrategyConfig extends PassportStrategy(Strategy) {
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: process.env.GOOGLE_CLIENT_SECRET,
+      // secretOrKey: process.env.GOOGLE_CLIENT_SECRET, --> breaks jwt
+      secretOrKey: process.env.JWT_ACCESS_SECRET,
       passReqToCallback: true,
     });
   }
