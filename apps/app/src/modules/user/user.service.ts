@@ -6,7 +6,6 @@ import { Repository } from 'typeorm';
 import { SignupUserDto } from '../auth/signup/dto/signupUser.dto';
 import { ChangeProfileDto } from '../change-profile/dto/changeProfile.dto';
 import { Bonus } from './entities/bonus.entity';
-import { BonusDto } from './dto/bonus.dto';
 
 @Injectable()
 export class UserService {
@@ -75,12 +74,26 @@ export class UserService {
         user: userId,
       },
     });
-    console.log(bonus)
 
     if (!bonus) {
       throw new NotFoundException(`Bonuses #${userId} not found`);
     }
     return bonus;
+  }
+
+  public async updateBonuses(userId, newAmount){
+    const bonus = await this.bonusRepository.findOne({
+      where: {
+        user: userId,
+      },
+    });
+
+    const oldAmount = bonus.amount;
+    bonus.amount = oldAmount + Number(newAmount);
+
+    await this.bonusRepository.update(bonus.id, bonus);
+    return bonus;
+
   }
 
   public async updateProfile(user, userData: ChangeProfileDto) {

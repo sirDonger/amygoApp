@@ -6,6 +6,8 @@ import {
   NotFoundException,
   UseGuards,
   Req,
+  Put,
+  Param
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { AuthGuard } from '@nestjs/passport';
@@ -13,6 +15,7 @@ import {
   ApiBearerAuth,
   ApiOkResponse,
   ApiUnauthorizedResponse,
+  ApiParam
 } from '@nestjs/swagger';
 
 @Controller('user')
@@ -45,5 +48,20 @@ export class UserController {
   public async getBonuses(@Req() req, @Res() res):Promise<void>{
     const bonuses = await this.usersService.findBonusById(req.user.id);
     return res.status(HttpStatus.OK).json(bonuses);
+  }
+
+  @Put('/bonuses/update/:bonuses')
+  @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth()
+  @ApiParam({name: 'bonuses'})
+  public async updateBonuses(@Req() req, @Res() res, @Param() params,){
+    try{
+      const newBonus = await this.usersService.updateBonuses(req.user.id, params.bonuses);
+      return res.status(HttpStatus.OK).json(newBonus)
+  } catch(err){
+      return res.status(HttpStatus.CONFLICT).json({
+          message: err.message || err.detail
+      })
+  }
   }
 }
